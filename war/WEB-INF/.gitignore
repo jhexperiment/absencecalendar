@@ -1,0 +1,9 @@
+#subvert parent ignore
+!*
+
+#ignore following
+appengine-generated
+appengine-web.xml
+google.properties
+classes/
+classes/*

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+	
+	<servlet>
+		<servlet-name>ParseAbsences</servlet-name>
+		<servlet-class>com.jhexperiment.java.absence_calendar.ServletParseAbsences</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>AddAbsence</servlet-name>
+		<servlet-class>com.jhexperiment.java.absence_calendar.ServletAddAbsence</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>RemoveAbsence</servlet-name>
+		<servlet-class>com.jhexperiment.java.absence_calendar.ServletRemoveAbsence</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>GetAbsences</servlet-name>
+		<servlet-class>com.jhexperiment.java.absence_calendar.ServletGetAbsences</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>SearchAbsences</servlet-name>
+		<servlet-class>com.jhexperiment.java.absence_calendar.ServletSearchAbsences</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>ExportAbsences</servlet-name>
+		<servlet-class>com.jhexperiment.java.absence_calendar.ServletExportAbsences</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>ImportAbsences</servlet-name>
+		<servlet-class>com.jhexperiment.java.absence_calendar.ServletImportAbsences</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>MarkComplete</servlet-name>
+		<servlet-class>com.jhexperiment.java.absence_calendar.ServletMarkComplete</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>ParseAbsences</servlet-name>
+		<url-pattern>/parse</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AddAbsence</servlet-name>
+		<url-pattern>/add</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RemoveAbsence</servlet-name>
+		<url-pattern>/remove</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>GetAbsences</servlet-name>
+		<url-pattern>/get</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SearchAbsences</servlet-name>
+		<url-pattern>/search</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ExportAbsences</servlet-name>
+		<url-pattern>/export</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ImportAbsences</servlet-name>
+		<url-pattern>/import</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>MarkComplete</servlet-name>
+		<url-pattern>/complete</url-pattern>
+	</servlet-mapping>
+	
+	<welcome-file-list>
+		<welcome-file>app.jsp</welcome-file>
+	</welcome-file-list>
+	
+</web-app>

@@ -1,0 +1,14 @@
+#domain of google app account
+domain=jhexperiment.com
+
+#login creds for google apps
+adminEmail=admin@jhexperiment.com
+adminPassword=1234abc^_^
+
+#domain group authorized to access this web app
+authorizedGroup=absenceCalendarAuthorized@jhexperiment.com
+
+#oauth
+oauthConsumerKey=jhexperiment.com
+oauthConsumerSecret=ZZZzz0zz010101aaa1aaaAAA
+
