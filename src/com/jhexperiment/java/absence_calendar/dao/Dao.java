@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -54,6 +56,30 @@ public enum Dao {
 		
 		List<Absence> absenceList = q.getResultList();
 		return absenceList;
+	}
+	
+	public List<HashMap<String, String>> listEmployees(String employmentType) {
+		EntityManager em = EMFService.get().createEntityManager();
+		String gql = "SELECT a.name "
+					+ "FROM Absence a "
+					+ "WHERE a.employmentType = :employmentType "
+					+ 	"ORDER BY a.name";
+		Query q = em.createQuery(gql);
+		q.setParameter("employmentType", employmentType);
+		List<HashMap<String, String>> employeeList = new ArrayList<HashMap<String, String>>();
+		
+		List<String> resultList = q.getResultList();
+		
+		for (String name : resultList) {
+			
+			HashMap<String, String> employee = new HashMap<String, String>();
+			employee.put("name", name);
+			if (! employeeList.contains(employee)) {
+				employeeList.add(employee);
+			}
+		}
+		
+		return employeeList;
 	}
 	
 	/**

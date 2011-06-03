@@ -3,6 +3,7 @@ package com.jhexperiment.java.absence_calendar;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
 
 
 import java.io.FileInputStream;
@@ -43,7 +44,11 @@ public class ServletImportAbsences extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		UserService userService = UserServiceFactory.getUserService();
 		if ( userService.isUserLoggedIn()) {
+			
+			String employmentType = req.getParameter("employmentType");
+			
 			ArrayList<HashMap<String, Object>> absenceList = new ArrayList<HashMap<String, Object>>();
+			
 			Properties appProps = new Properties();
 			String path = this.getServletContext().getRealPath("/WEB-INF");
 			FileInputStream appPropFile = new FileInputStream(path + "/app.properties");
@@ -56,13 +61,15 @@ public class ServletImportAbsences extends HttpServlet {
 				FileItemIterator iterator = upload.getItemIterator(req);
 				while (iterator.hasNext()) {
 					FileItemStream item = iterator.next();
-					InputStream stream = item.openStream();
-
+					
 					if (item.isFormField()) {
-			          log.warning("Got a form field: " + item.getFieldName());
+					  if ("employmentType".equals(item.getFieldName())) {
+						  InputStream stream = item.openStream();
+						  employmentType = Streams.asString(stream);;
+			          }
 			        } else {
 			        	log.warning("Got an uploaded file: " + item.getFieldName() + ", name = " + item.getName());
-
+			        	InputStream stream = item.openStream();
 						CSVReader reader = new CSVReader(new InputStreamReader(stream));
 						String [] absenceInfo;
 						// read header line
@@ -100,8 +107,11 @@ public class ServletImportAbsences extends HttpServlet {
 				}
 		    } 
 			finally {
+				HashMap<String, Object> info = new HashMap<String, Object>();
+				info.put("absenceList", absenceList);
+				info.put("employeeList", Dao.INSTANCE.listEmployees(employmentType));
 		    	Gson gson = new Gson();
-				String json = gson.toJson(absenceList);
+				String json = gson.toJson(info);
 				
 				resp.getWriter().print(json);
 		    }

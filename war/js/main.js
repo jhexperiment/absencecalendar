@@ -1104,8 +1104,10 @@ var thisPage = {
 	},
 	'csvImport': function(event) {
 		event.preventDefault();
+		var employmentType = $("#searchResultsContainer .title .text").html();
 		var html	= '<div id="fileUploadMenu" class="ui-widget-content auraGreen">'
 					+	'<form action="/import" method="POST" type="multipart/form-data">'
+					+		'<input type="hidden" name="employmentType" value="' + employmentType + '">'
 					+		'<input type="file" id="csvFile" name="csvFile">'
 					+	'</form>'
 					+ '</div>'
@@ -1130,11 +1132,11 @@ var thisPage = {
 		});
 		htmlDom.children('form').ajaxForm({
 			dataType: "json",
-			success: function(absenceList, textStatus, jqXHR) {
+			success: function(info, textStatus, jqXHR) {
 				var tmp = '';
 				$("#searchResultsContainer .label span.text").html("Csv Import Results:");
 				thisPage.clearSearchResults();
-				$.each(absenceList, function(index) {
+				$.each(info.absenceList, function(index) {
 					thisPage.displaySearchResult(this, index);
 				})
 				$("#fileUploadMenu").remove();
@@ -1143,7 +1145,8 @@ var thisPage = {
 				$("#searchResults #formSubmitted").hide();
 				$("#popupBackground").click();
 				$("#calendarHeader #calendarSelect select").change();
-				thisPage.fillInCalendarSelect(absenceList, "");
+				
+				thisPage.fillInCalendarSelect(info.employeeList, "");
 			}
 		});
 		$("body").append(htmlDom);
