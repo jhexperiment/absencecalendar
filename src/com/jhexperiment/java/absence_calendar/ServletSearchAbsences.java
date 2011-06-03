@@ -39,7 +39,7 @@ public class ServletSearchAbsences extends HttpServlet {
 			
 			String json = "";
 			if (searchBy.equals("date")) {
-				Date date = this.isValidDate(query);
+				Date date = Dao.INSTANCE.isValidDate(query);
 				if (date != null) { // valid date found; 
 					List<Absence> absenceList = dao.getAbsences(employmentType, "date", "=", date.getTime());
 					json = gson.toJson(absenceList);
@@ -70,49 +70,5 @@ public class ServletSearchAbsences extends HttpServlet {
 		}
 	}
 	
-	/**
-	 * Checks whether supplied date string is an acceptable format for this app.
-	 * @param inDate
-	 * @return
-	 */
-	private Date isValidDate(String inDate) {
-
-	    if (inDate == null)
-	      return null;
-
-	    List<SimpleDateFormat> dateFormatList = new ArrayList<SimpleDateFormat>();
-	    dateFormatList.add(new SimpleDateFormat("MM-dd-yyyy"));
-	    dateFormatList.add(new SimpleDateFormat("MM.dd.yyyy"));
-	    dateFormatList.add(new SimpleDateFormat("MM/dd/yyyy"));
-	    dateFormatList.add(new SimpleDateFormat("MM\\dd\\yyyy"));
-	    dateFormatList.add(new SimpleDateFormat("MM dd yyyy"));
-	    dateFormatList.add(new SimpleDateFormat("MM-dd-yy"));
-	    dateFormatList.add(new SimpleDateFormat("MM.dd.yy"));
-	    dateFormatList.add(new SimpleDateFormat("MM/dd/yy"));
-	    dateFormatList.add(new SimpleDateFormat("MM\\dd\\yy"));
-	    dateFormatList.add(new SimpleDateFormat("MMM dd yy"));
-	    dateFormatList.add(new SimpleDateFormat("MMM dd, yyyy"));
-	    
-	    SimpleDateFormat foundFormat;
-	    for (SimpleDateFormat dateFormat : dateFormatList) {
-	    	
-	    	if (inDate.trim().length() != dateFormat.toPattern().length()) {
-	    		
-	    	}
-	  	    
-	  	    dateFormat.setLenient(false);
-	  	    
-	  	    try {
-	  	      //parse the inDate parameter
-	  	      Date date = dateFormat.parse(inDate.trim());
-	  	      return date;
-	  	    }
-	  	    catch (ParseException pe) {
-	  	      
-	  	    }
-	    }
-	    
-	    
-	    return null;
-	  }
+	
 }

@@ -213,7 +213,7 @@ var thisPage = {
 						thisPage.clearAura(nameDom);
 					}
 					
-					// validate rn
+					// validate reason (rn)
 					var rn = $("#addAbsenceDialog table .rn").val();
 					var rnErrorDom = $("#addAbsenceDialog table td #rnError");
 					var emptyRn = isEmpty(rn);
@@ -485,13 +485,29 @@ var thisPage = {
 		var style = (absence.isDuplicate == "true") ? "background-color:green;" : "";
 		var checked = absence.formSubmitted ? 'checked="checked"' : "";
 		var date;
+		
 		if (absence.date == null) {
 			date = "";
 		}
 		else {
 			date = new Date(absence.date);
-			var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-			date = months[date.getUTCMonth()] + " " + date.getUTCDate() + " " + date.getUTCFullYear();
+			if ( Object.prototype.toString.call(date) === "[object Date]" ) {
+				// it is a date
+				if ( isNaN( date.getTime() ) ) {  
+					// date is not valid
+					date = "";
+				}
+				else {
+					// date is valid
+					var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+					date = months[date.getUTCMonth()] + " " + date.getUTCDate() + " " + date.getUTCFullYear();
+				}
+			}
+			else {
+			  // not a date
+				date = "";
+			}
+			
 		}
 		var duplicate = (absence.duplicate) ? "Absence already exists. " : "";
 		var success = "";
@@ -516,12 +532,13 @@ var thisPage = {
 		else {
 			infoClass = "ui-state-error";
 		}
+		var err = duplicate + absence.error;
 		var html = '<tr class="item" style="' + style + '">'
 				 + 		'<input id="absenceId" type="hidden" value="' + absence.id +  '">'
 				 + 		'<td id="formSubmitted"><input type="checkbox"' + checked + '></td>'
 				 + 		'<td id="date">' + date +'</td>'
 				 + 		'<td id="name">' + absence.name + '</td>' 
-				 + 		'<td id="info" class="' + infoClass + '">' + duplicate + absence.error + '</td>'
+				 + 		'<td id="info" class="' + infoClass + '" title="' + err + '">' + err + '</td>'
 				 + '</tr>';
 		var htmlDom = $(html);
 		htmlDom.click(function() {

@@ -64,16 +64,11 @@ public class ServletImportAbsences extends HttpServlet {
 						while ((absenceInfo = reader.readNext()) != null) {
 							absenceList.add(this.processAbsence(absenceInfo));
 						}
-			  		
-						String tmp = "";
-						tmp = tmp + "s";
-						  
-						
 			        }	
 		      	}
 		    } 
-			catch (Exception ex) {
-		      throw new ServletException(ex);
+			catch (Exception e) {
+		      throw new ServletException(e);
 		    } 
 			finally {
 		    	Gson gson = new Gson();
@@ -84,82 +79,52 @@ public class ServletImportAbsences extends HttpServlet {
 			
 		}
 	}
+	
 	private HashMap<String, Object> processAbsence(String[] absenceInfo){
 		String action = absenceInfo[0];
 		// ID = absenceInfo[1]
 		
 		HashMap<String, Object> absenceJson = new HashMap<String, Object>();
 		
+		Absence absence = null;
 		if (action.equals("update")) {
 			try {
-				String employmentType = absenceInfo[2];
-				Date date = new Date(absenceInfo[3]);
-				Timestamp timestamp = new Timestamp(date.getTime());
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(timestamp);
-				cal.set(Calendar.HOUR, 0);
-				cal.set(Calendar.MINUTE, 0);
-				cal.set(Calendar.SECOND, 0);
-				cal.set(Calendar.MILLISECOND, 0);
-				
-				boolean formSubmitted = new Boolean(absenceInfo[4]);
-				String name = absenceInfo[5];
-				int hours = Integer.parseInt(absenceInfo[6]);
-				int rn = Integer.parseInt(absenceInfo[7]);
-				
 				absenceJson.put("action", action);
-				absenceJson.put("employmentType", employmentType);
-				absenceJson.put("date", cal.getTimeInMillis());
-				absenceJson.put("rn", rn);
-				absenceJson.put("name", name);
-				absenceJson.put("hours", hours);
-				absenceJson.put("formSubmitted", formSubmitted);
+				absenceJson.put("id", absenceInfo[1]);
+				absenceJson.put("employmentType", absenceInfo[2]);
+				absenceJson.put("date", absenceInfo[3]);
+				absenceJson.put("name", absenceInfo[5]);
+				absenceJson.put("formSubmitted", absenceInfo[4]);
+				absenceJson.put("hours", absenceInfo[6]);
+				absenceJson.put("rn", absenceInfo[7]);
 				
-				Long id = new Long(absenceInfo[1]);
-				absenceJson.put("id", id);
-				Absence absence = new Absence(id, employmentType, cal.getTimeInMillis(), rn, name, hours, formSubmitted);
+				absence = Dao.INSTANCE.isValidAbsence(action, absenceInfo[1], absenceInfo[2],
+						absenceInfo[3], absenceInfo[7], absenceInfo[5], absenceInfo[6], absenceInfo[4]);
+				absenceJson.put("date", absence.getDate());
 				Dao.INSTANCE.update(absence);
 			}
 			catch (Exception e) {
-				if (e instanceof NumberFormatException) {
-					absenceJson.put("error", "ID required when updating. No changes made for this absence.");
-				}
-				else if (e instanceof AbsenceException) {
+				if (e instanceof AbsenceException) {
 					absenceJson.put("error", e.getMessage());
 				}
 			}
 		}
 		else if (action.equals("add")) {
 			try {
-				String employmentType = absenceInfo[2];
-				Date date = new Date(absenceInfo[3]);
-				Timestamp timestamp = new Timestamp(date.getTime());
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(timestamp);
-				cal.set(Calendar.HOUR, 0);
-				cal.set(Calendar.MINUTE, 0);
-				cal.set(Calendar.SECOND, 0);
-				cal.set(Calendar.MILLISECOND, 0);
-				
-				boolean formSubmitted = new Boolean(absenceInfo[4]);
-				String name = absenceInfo[5];
-				int hours = Integer.parseInt(absenceInfo[6]);
-				int rn = Integer.parseInt(absenceInfo[7]);
-				
 				absenceJson.put("action", action);
-				absenceJson.put("employmentType", employmentType);
-				absenceJson.put("date", cal.getTimeInMillis());
-				absenceJson.put("rn", rn);
-				absenceJson.put("name", name);
-				absenceJson.put("hours", hours);
-				absenceJson.put("formSubmitted", formSubmitted);
+				absenceJson.put("id", absenceInfo[1]);
+				absenceJson.put("employmentType", absenceInfo[2]);
+				absenceJson.put("date", absenceInfo[3]);
+				absenceJson.put("name", absenceInfo[5]);
+				absenceJson.put("formSubmitted", absenceInfo[4]);
+				absenceJson.put("hours", absenceInfo[6]);
+				absenceJson.put("rn", absenceInfo[7]);
 				
-				if (! absenceInfo[1].equals("")) {
-					throw new AbsenceException("ID must be blank when adding. No changes made to this absence.");
-				}
+				absence = Dao.INSTANCE.isValidAbsence(action, absenceInfo[1], absenceInfo[2],
+						absenceInfo[3], absenceInfo[7], absenceInfo[5], absenceInfo[6], absenceInfo[4]);
 				
-				Absence absence = new Absence(employmentType, cal.getTimeInMillis(), rn, name, hours, formSubmitted);
 				Dao.INSTANCE.add(absence);
+				
 			}
 			catch (Exception e) {
 				if (e instanceof DuplicateAbsenceException) {
@@ -175,14 +140,14 @@ public class ServletImportAbsences extends HttpServlet {
 			try {
 				Long id = new Long(absenceInfo[1]);
 				absenceJson.put("id", id);
-				Absence absence = Dao.INSTANCE.remove(id);
+				absence = Dao.INSTANCE.remove(id);
 				absenceJson.put("action", action);
 				absenceJson.put("employmentType", absence.getEmploymentType());
 				absenceJson.put("date", absence.getDate());
 				absenceJson.put("rn", absence.getRn());
 				absenceJson.put("name", absence.getName());
 				absenceJson.put("hours", absence.getHours());
-				absenceJson.put("formSubmitted", absence.getFormSubmitted());
+				absenceJson.put("formSubmitted", absence.getFormSubmitted());				
 			}
 			catch (Exception e) {
 				absenceJson.put("action", action);
@@ -190,12 +155,36 @@ public class ServletImportAbsences extends HttpServlet {
 				absenceJson.put("name", "");
 				
 				if (e instanceof NumberFormatException) {
-					absenceJson.put("error", "ID required when removing. No changes made for this absence.");
+					absenceJson.put("error", "Error: ID required when removing. ");
 				}
 				else if (e instanceof AbsenceException) {
-					absenceJson.put("error", "ID: " + absenceInfo[1] + ". " + e.getMessage());
+					absenceJson.put("error", "Error: ID: " + absenceInfo[1] + ". " + e.getMessage());
 				}
 			}
+		}
+		else if ("".equals(action) || action == null) {
+			absenceJson.put("action", action);
+			absenceJson.put("id", absenceInfo[1]);
+			absenceJson.put("employmentType", absenceInfo[2]);
+			absenceJson.put("date", absenceInfo[3]);
+			absenceJson.put("name", absenceInfo[5]);
+			absenceJson.put("formSubmitted", absenceInfo[4]);
+			absenceJson.put("hours", absenceInfo[6]);
+			absenceJson.put("rn", absenceInfo[7]);
+			
+			absenceJson.put("error", "Error: An action is required. ");
+		}
+		else {
+			absenceJson.put("action", action);
+			absenceJson.put("id", absenceInfo[1]);
+			absenceJson.put("employmentType", absenceInfo[2]);
+			absenceJson.put("date", absenceInfo[3]);
+			absenceJson.put("name", absenceInfo[5]);
+			absenceJson.put("formSubmitted", absenceInfo[4]);
+			absenceJson.put("hours", absenceInfo[6]);
+			absenceJson.put("rn", absenceInfo[7]);
+			
+			absenceJson.put("error", "Error: Unknown action. ");
 		}
 		
 		return absenceJson;

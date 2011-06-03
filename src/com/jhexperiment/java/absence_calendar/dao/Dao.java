@@ -1,5 +1,11 @@
 package com.jhexperiment.java.absence_calendar.dao;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -150,6 +156,173 @@ public enum Dao {
 		absence = em.find(Absence.class, id);
 		
 		return absence != null; 
+	}
+	
+	public Absence isValidAbsence(String action, String id, String employmentType, String date, 
+									String rn, String name, String hours, String formSubmitted) 
+			throws AbsenceException {
+		
+		boolean valid = true;
+		String errMsg = "Error: ";
+		
+		// validate id
+		Long validId = new Long(0);
+		if ( "update".equals(action) && (id == null || "".equals(id)) ) {
+			valid = false;
+			errMsg += "Missing ID. ";
+		}
+		else if ( "add".equals(action) && ! "".equals(id) ) {
+			valid = false;
+			errMsg += "ID must be blank to add. ";
+		}
+		else {
+			try {
+				validId = new Long(id);
+			}
+			catch (NumberFormatException e) {
+				valid = false;
+				errMsg += "Invalid ID. ";
+			}
+		}
+		
+		// validate employmentType; enum(Teachers, Classified Employees)
+		if (employmentType == null || "".equals(employmentType)) {
+			valid = false;
+			errMsg += "Missing employmentType. ";
+		}
+		else if (! "Teachers".equals(employmentType) && ! "Classified Employees".equals(employmentType)) {
+			valid = false;
+			errMsg += "Invalid employmentType. Allowed types: 'Teachers', 'Classified Employees'. ";
+		}
+		
+		// validate date; valid date format, is not empty
+		Date validDate = this.isValidDate(date);
+		Calendar cal = Calendar.getInstance();
+		if ("".equals(date)) {
+			valid = false;
+			errMsg += "Missing date. ";
+		}
+		else if (validDate == null) {
+			valid = false;
+			errMsg += "Invalid date format. See wiki. ";
+		}
+		else {
+			Timestamp timestamp = new Timestamp(validDate.getTime());
+			cal.setTime(timestamp);
+			cal.set(Calendar.HOUR, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+		}
+		
+		// validate formSubmitted;
+		boolean validFormSubmitted = false;
+		if ("false".equals(formSubmitted.toLowerCase())) {
+			validFormSubmitted = false;
+		}
+		else if ("true".equals(formSubmitted.toLowerCase())) {
+			validFormSubmitted = true;
+		}
+		else {
+			valid = false;
+			errMsg += "formSubmitted field must be either TRUE or FALSE. ";
+		}
+		
+		// validate name; contains only 1 comma, only alpha, is not empty
+		if ("".equals(name) || name == null || (name.replaceAll("[^,]", "").length() > 1) || (! name.matches("^[a-zA-Z, /-]*$")) ) {
+			valid = false;
+			errMsg += "Name must not be empty and can only contain letters and one comma. ";
+		}
+		
+		// validate hours; is valid number, is not empty
+		int validHours = 0;
+		if (hours == null || "".equals(hours)) {
+			valid = false;
+			errMsg += "Missing hours. ";
+		}
+		else {
+			try {
+				validHours = new Integer(hours);
+			}
+			catch (NumberFormatException e) {
+				valid = false;
+				errMsg += "Invalid hours. ";
+			}
+		}
+		
+		// validate reason (rn); is valid number, is not empty
+		int validReason = 0;
+		if (rn == null || "".equals(rn)) {
+			valid = false;
+			errMsg += "Missing reason id. ";
+		}
+		else {
+			try {
+				validReason = new Integer(rn);
+			}
+			catch (NumberFormatException e) {
+				valid = false;
+				errMsg += "Invalid reason id. ";
+			}
+		}
+		
+		Absence absence = null;
+		if (valid) {
+			
+			absence = new Absence(validId, employmentType, cal.getTimeInMillis(), validReason, 
+									name, validHours, validFormSubmitted);
+		}
+		else {
+			throw new AbsenceException(errMsg);
+		}
+		return absence;
+	}
+	
+	/**
+	 * Checks whether supplied date string is an acceptable format for this app.
+	 * @param inDate
+	 * @return
+	 */
+	public Date isValidDate(String inDate) {
+
+	    if (inDate == null)
+	      return null;
+	
+	    List<SimpleDateFormat> dateFormatList = new ArrayList<SimpleDateFormat>();
+	    dateFormatList.add(new SimpleDateFormat("MM-dd-yyyy"));
+	    dateFormatList.add(new SimpleDateFormat("MM.dd.yyyy"));
+	    dateFormatList.add(new SimpleDateFormat("MM/dd/yyyy"));
+	    dateFormatList.add(new SimpleDateFormat("MM\\dd\\yyyy"));
+	    dateFormatList.add(new SimpleDateFormat("MM dd yyyy"));
+	    dateFormatList.add(new SimpleDateFormat("MM-dd-yy"));
+	    dateFormatList.add(new SimpleDateFormat("MM.dd.yy"));
+	    dateFormatList.add(new SimpleDateFormat("MM/dd/yy"));
+	    dateFormatList.add(new SimpleDateFormat("MM\\dd\\yy"));
+	    dateFormatList.add(new SimpleDateFormat("MMM dd yy"));
+	    dateFormatList.add(new SimpleDateFormat("MMM dd, yyyy"));
+	    dateFormatList.add(new SimpleDateFormat("dd-MMM-yy"));
+	    
+	    SimpleDateFormat foundFormat;
+	    for (SimpleDateFormat dateFormat : dateFormatList) {
+	    	
+	    	if (inDate.trim().length() != dateFormat.toPattern().length()) {
+	    		
+	    	}
+	  	    
+	  	    dateFormat.setLenient(false);
+	  	    
+	  	    try {
+	  	      //parse the inDate parameter
+	  	      Date date = dateFormat.parse(inDate.trim());
+	  	      return date;
+	  	    }
+	  	    catch (ParseException pe) {
+	  	      
+	  	    }
+	    }
+	    
+	    
+	    return null;
 	}
 	
 	/**

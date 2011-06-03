@@ -499,6 +499,8 @@ html, body {
 #searchResults {
 	width: 100%;
 	text-align: left;
+	
+	table-layout:fixed;
 }
 
 #searchResults .searchResultEmpty {
@@ -534,9 +536,9 @@ html, body {
 }
 
 #searchResults #date {
-	mmin-width: 80px;
-	width: 80px;
-	max-width: 80px;
+	mmin-width: 90px;
+	width: 90px;
+	max-width: 90px;
 	
 	padding: 0px 10px 0px 0px;
 	
@@ -548,7 +550,9 @@ html, body {
 }
 
 #searchResults #info {
-	
+	text-overflow:ellipsis;
+	overflow:hidden;
+	white-space:nowrap;
 }
 
 #searchResults .ui-state-hover {
