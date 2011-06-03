@@ -43,12 +43,19 @@ User user = userService.getCurrentUser();
 
 
 ArrayList<String> userList = new ArrayList<String>();
+Properties appProps = new Properties();
+Properties googleProps = new Properties();
 try {
-	// Get google properties
-	Properties googleProps = new Properties();
 	String path = this.getServletContext().getRealPath("/WEB-INF");
+	
+	// Get google properties
 	FileInputStream googlePropFile = new FileInputStream(path + "/google.properties");
 	googleProps.load(googlePropFile);        
+	
+	// Get genral app properties
+	FileInputStream appPropFile = new FileInputStream(path + "/app.properties");
+	appProps.load(appPropFile);        
+	
 	String authorizedGroup = googleProps.getProperty("authorizedGroup");
 	// Get list of users authorized to access app
 	userList = GoogleWrapper.INSTANCE.getUserList(authorizedGroup, googleProps);
@@ -85,6 +92,7 @@ absenceList = dao.listAbsences("Teachers");
 List<String> tmpList = new ArrayList<String>();
 
 %>
+	<input type="hidden" id="importRecordLimit" value="<%= appProps.getProperty("importRecordLimit") %>">
 	<div id="appNavBar">
 		<div class="appNavLeftItem">&nbsp;</div>
 		<div id="absencesNavItem" class="currentNavItem appNavLeftItem">
@@ -233,6 +241,11 @@ int nextYear = year + 1;
 						<div class="mask">
 							<%= j %>
 						</div>
+						<div class="tooltip">
+							<div class="tooltip-content"></div>
+							<div class="tooltip-arrow-border"></div>
+	  					<div class="tooltip-arrow"></div>
+	  				</div>
 					</div>
 			
 <% 		} %>		
@@ -266,7 +279,11 @@ int nextYear = year + 1;
 					<span id="nameError" class="ui-corner-all ui-state-error" title="">
 						<span class="ui-icon ui-icon-alert"></span>
 					</span>
-					<div class="tooltip"></div>
+					<div class="tooltip">
+						<div class="tooltip-content"></div>
+						<div class="tooltip-arrow-border"></div>
+  					<div class="tooltip-arrow"></div>
+  				</div>
 				</td>
 			</tr>
 			<tr>
@@ -276,7 +293,11 @@ int nextYear = year + 1;
 					<span id="rnError" class="ui-corner-all ui-state-error" title="">
 						<span class="ui-icon ui-icon-alert"></span>
 					</span>
-					<div class="tooltip"></div>
+					<div class="tooltip">
+						<div class="tooltip-content"></div>
+						<div class="tooltip-arrow-border"></div>
+  					<div class="tooltip-arrow"></div>
+  				</div>
 				</td>
 			</tr>
 			<tr>
@@ -286,7 +307,11 @@ int nextYear = year + 1;
 					<span id="hoursError" class="ui-corner-all ui-state-error" title="">
 						<span class="ui-icon ui-icon-alert"></span>
 					</span>
-					<div class="tooltip"></div>
+					<div class="tooltip">
+						<div class="tooltip-content"></div>
+						<div class="tooltip-arrow-border"></div>
+  					<div class="tooltip-arrow"></div>
+  				</div>
 				</td>
 			</tr>
 		</table>

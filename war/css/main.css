@@ -97,6 +97,9 @@ html, body {
 }
 
 #popupMenu {
+	-moz-box-shadow: 5px 5px 10px #000000;
+  -webkit-box-shadow: 5px 5px 10px #000000;
+  
 	z-index: 101;
 }
 
@@ -663,8 +666,7 @@ select {
 	-moz-box-shadow: 0 0 20px #1BC6E0;
 	-webkit-box-shadow: 0 0 20px #1BC6E0;
 }
-
-/* tooltip styling */
+/*
 .tooltip {
 	position: relative;
 	display:none;
@@ -677,17 +679,111 @@ select {
 	z-index: 9999;
 }
 
-/* a .label element inside tooltip */
-.tooltip .label {
-	color:yellow;
-	width:35px;
-}
-
 .tooltip a {
 	color:#ad4;
 	font-size:11px;
 	font-weight:bold;
 }
+*/
+
+.tooltip {
+	min-width: 50px;
+	
+	padding: 10px;
+  margin: 10px auto;
+  
+  border: 2px solid #433F38;
+  background-color: #ECE8DA;
+  color: #433F38;
+  text-align: left;
+  
+  position: fixed;
+  display: none;
+  
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  -moz-box-shadow:0 0 5px #888888;
+  -webkit-box-shadow:0 0 5px #888888;
+  
+  z-index: 2000;
+}
+
+.tooltip .tooltip-content {
+	
+}
+
+.tooltip .tooltip-arrow {
+	border-style: solid;
+  border-width: 10px;
+  height:0;
+  width:0;
+  position:absolute;
+  
+}
+
+.tooltip .tooltip-arrow-left-top {
+	top: 10px;
+  left: -17px;
+  
+  border-color: transparent #EDEDED transparent transparent;
+}
+
+.tooltip .tooltip-arrow-border-left-top {
+	top: 10px;
+	left: -20px;
+	border-color: transparent #433F38 transparent transparent;
+}
+
+
+.tooltip .tooltip-arrow-bottom-left {
+	bottom: -19px;
+  left: 30px;
+  
+  border-color: #EDEDED transparent transparent transparent;
+}
+
+.tooltip .tooltip-arrow-border-bottom-left {
+	bottom: -22px;
+	left: 30px;
+	border-color: #433F38 transparent transparent transparent;
+}
+
+.tooltip .tooltip-arrow-top-right {
+	top: -19px;
+  left: 30px;
+  
+  border-color: transparent transparent #EDEDED transparent;
+}
+
+.tooltip .tooltip-arrow-border-top-right {
+	top: -22px;
+	left: 30px;
+	border-color: transparent transparent #433F38 transparent;
+}
+
+
+
+.tooltip .tooltip-arrow-border {
+	border-style: solid;
+  border-width: 10px;
+  height: 0;
+  width: 0;
+  position:absolute;
+}
+
+.tooltip .tooltip-arrow-border-bottom-left {
+	bottom: -22px;
+	left: 30px;
+	border-color: #666666 transparent transparent transparent;
+}
+
+.tooltip .tooltip-arrow-border-center-right {
+	left: -20px;
+	margin: auto 0px auto 0px;
+	border-color: transparent #666666 transparent transparent;
+}
+
+
 
 #categorySelector {
 	display: inline-block;

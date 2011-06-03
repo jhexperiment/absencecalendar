@@ -14,7 +14,30 @@ var thisPage = {
 		$("#calendarSelect select option:first").attr("selected", true);
 		$("#calendarSelect select").change(thisPage.calendarSelected);
 		$("#calendarHeader #importButton").click(thisPage.budgetImport);
+		
 		$("#calendar .month .day").click(thisPage.dayClick);
+		$("#calendar .month .day .tooltip-arrow")
+			.removeClass()
+			.addClass("tooltip-arrow")
+			.addClass("tooltip-arrow-top-right");
+		$("#calendar .month .day .tooltip-arrow-border")
+			.removeClass()
+			.addClass("tooltip-arrow-border")
+			.addClass("tooltip-arrow-border-top-right");
+		$("#calendar .month .day .mask").tooltip({
+			effect: "slide",
+			relative: true,
+			position: "bottom right",
+			offset: [15, -50],
+			onBeforeShow: function(event) {
+				if ( ! this.getTrigger().parent(".day").hasClass("absentDay") || 
+					 $("#calendarHeader .title").html() == "Master Calendar") {
+					return false;
+				}
+				
+			}
+		});
+		
 		$("#header #searchButton").click(thisPage.search);
 		$("#searchResultsContainer .label .title .ui-icon").click(thisPage.employmentTypeSelect);
 		$("#header #searchQuery").keypress(function(event) {
@@ -97,11 +120,12 @@ var thisPage = {
 	},
 	
 	'initDialog': function() {
+		/*
 		$("#addAbsenceDialog .ui-state-error").tooltip({ 
 			effect: 'slide',
 			relative: true
 		});
-		
+		*/
 		var absenceDialogSelect = $("#addAbsenceDialog #nameField select");
 		absenceDialogSelect.focus(function() {
 			$(this).css("width", "auto");
@@ -180,11 +204,29 @@ var thisPage = {
 					
 					if (curSelect == "Master Calendar") {
 						title = "Please select a calendar or create new one.";
-						$("#addAbsenceDialog #nameField .tooltip").html(title);
-						nameErrorDom.show();
+						
+						$("#addAbsenceDialog #nameField .tooltip .tooltip-arrow")
+							.removeClass()
+							.addClass("tooltip-arrow")
+							.addClass("tooltip-arrow-left-top");
+						$("#addAbsenceDialog #nameField .tooltip .tooltip-arrow-border")
+							.removeClass()
+							.addClass("tooltip-arrow-border")
+							.addClass("tooltip-arrow-border-left-top");
+						$("#addAbsenceDialog #nameField .tooltip .tooltip-content").html(title);
+						nameErrorDom.tooltip({
+							effect: "slide",
+							relative: true,
+							position: "bottom right",
+							offset: [-30, 10]
+						});
+						
 						thisPage.clearAura(selectDom);
 						thisPage.clearAura(nameDom);
 						selectDom.addClass("auraRed");
+						nameErrorDom.show();
+						
+						
 					}
 					else if ( curSelect == "New Calendar") {
 						// validate name
@@ -200,11 +242,29 @@ var thisPage = {
 						if (! validName) {
 							title = "Only letters, spaces, and a single comma allowed.<br><br>"
 								  +	"Example: LAST, FIRST";
-							$("#addAbsenceDialog #nameField .tooltip").html(title);
-							nameErrorDom.show();
+							
+							$("#addAbsenceDialog #nameField .tooltip .tooltip-arrow")
+								.removeClass()
+								.addClass("tooltip-arrow")
+								.addClass("tooltip-arrow-left-top");
+							$("#addAbsenceDialog #nameField .tooltip .tooltip-arrow-border")
+								.removeClass()
+								.addClass("tooltip-arrow-border")
+								.addClass("tooltip-arrow-border-left-top");
+							$("#addAbsenceDialog #nameField .tooltip .tooltip-content").html(title);
+							nameErrorDom.tooltip({
+								effect: "slide",
+								relative: true,
+								position: "bottom right",
+								offset: [-30, 10]
+							});
+							
+						
 							thisPage.clearAura(selectDom);
 							thisPage.clearAura(nameDom);
 							nameDom.addClass("auraRed");
+							nameErrorDom.show();
+							
 						}
 					}
 					else {
@@ -220,11 +280,28 @@ var thisPage = {
 					var regex = /^[0-9]+$/g
 					var validRn = ( ! emptyRn ) && rn.match(regex);
 					if (! validRn ) {
-						rnErrorDom.show();
 						var title = emptyRn ? "Please enter RN.<br><br>" : "";
 						title += "Numbers only.";
-						$("#addAbsenceDialog #rnField .tooltip").html(title);
+						
+						$("#addAbsenceDialog #rnField .tooltip .tooltip-arrow")
+							.removeClass()
+							.addClass("tooltip-arrow")
+							.addClass("tooltip-arrow-left-top");
+						$("#addAbsenceDialog #rnField .tooltip .tooltip-arrow-border")
+							.removeClass()
+							.addClass("tooltip-arrow-border")
+							.addClass("tooltip-arrow-border-left-top");
+						$("#addAbsenceDialog #rnField .tooltip .tooltip-content").html(title);
+						rnErrorDom.tooltip({
+							effect: "slide",
+							relative: true,
+							position: "bottom right",
+							offset: [-30, 10]
+						});
+						
 						rnDom.addClass("auraRed");
+						rnErrorDom.show();
+						
 					}
 					else {
 						rnErrorDom.hide();
@@ -239,16 +316,30 @@ var thisPage = {
 					var regex = /^[0-9]+$/g
 					var validHours = ( ! emptyHours ) && rn.match(regex);
 					if (! validHours ) {
-						hoursErrorDom.show();
 						var title = emptyHours ? "Please enter Hours.<br><br>" : "";
 						title += "Numbers only.";
-						$("#addAbsenceDialog #hoursField .tooltip").html(title);
-						//rnErrorDom.attr("title", title);
-						//rnErrorDom.tooltip();
+						
+						$("#addAbsenceDialog #hourField .tooltip .tooltip-arrow")
+							.removeClass()
+							.addClass("tooltip-arrow")
+							.addClass("tooltip-arrow-left-top");
+						$("#addAbsenceDialog #hourField .tooltip .tooltip-arrow-border")
+							.removeClass()
+							.addClass("tooltip-arrow-border")
+							.addClass("tooltip-arrow-border-left-top");
+						$("#addAbsenceDialog #hourField .tooltip .tooltip-content").html(title);
+						hoursErrorDom.tooltip({
+							effect: "slide",
+							relative: true,
+							position: "bottom right",
+							offset: [-30, 10]
+						});
+						
 						hoursDom.addClass("auraRed");
+						hoursErrorDom.show();
 					}
 					else {
-						rnErrorDom.hide();
+						hoursErrorDom.hide();
 					}
 					
 					
@@ -715,7 +806,7 @@ var thisPage = {
 		}
 		else {
 			querySite('get', data, function(absenceList, textStatus, jqXHR) {
-				$("#calendar .month .day").attr("title", "");
+				$("#calendar .month .day .tooltip-content").html("");
 				$("#calendar .month .absentDay").removeClass("absentDay");
 				$("#calendar .month .day .mask").removeClass("formSubmitted");
 				$.each(absenceList, function() {
@@ -726,8 +817,13 @@ var thisPage = {
 									+ " #day_" + date.getUTCDate());
 						dom.addClass("absentDay");
 						dom.children(".absenceId").val(this.id);
+						
 						var title = "RN: " + this.rn;
-						dom.attr("title", title);
+						if ( $("#searchResultsContainer .title .text").html() == "Classified Employees" ) {
+							title += "<br><br>Hours: " + this.hours;
+						}
+						dom.children(".tooltip").children(".tooltip-content").html(title);
+						
 						if (this.formSubmitted) {
 							dom.children(".mask").addClass("formSubmitted");
 						}
@@ -1012,6 +1108,11 @@ var thisPage = {
 					+	'<form action="/import" method="POST" type="multipart/form-data">'
 					+		'<input type="file" id="csvFile" name="csvFile">'
 					+	'</form>'
+					+ '</div>'
+					+ '<div id="fileUploadMenuTooltip" class="tooltip">'
+					+	'<div class="tooltip-content"></div>'
+					+	'<div class="tooltip-arrow-border"></div>'
+					+	'<div class="tooltip-arrow"></div>'
 					+ '</div>';
 		
 		var htmlDom = $(html);
@@ -1037,6 +1138,7 @@ var thisPage = {
 					thisPage.displaySearchResult(this, index);
 				})
 				$("#fileUploadMenu").remove();
+				$("#fileUploadMenuTooltip").remove();
 				$("#searchResults #date").show();
 				$("#searchResults #formSubmitted").hide();
 				$("#popupBackground").click();
@@ -1044,13 +1146,27 @@ var thisPage = {
 				thisPage.fillInCalendarSelect(absenceList, "");
 			}
 		});
-		/*
-		htmlDom.children('form').submit(function() {
-			$(this).ajaxSubmit();
-			return false;
-		});
-		*/
 		$("body").append(htmlDom);
+		
+		var title = "Import record limit: " + $("#importRecordLimit").val() + " records.";
+		$("#fileUploadMenuTooltip .tooltip-arrow")
+			.removeClass()
+			.addClass("tooltip-arrow")
+			.addClass("tooltip-arrow-top-right");
+		$("#fileUploadMenuTooltip .tooltip-arrow-border")
+			.removeClass()
+			.addClass("tooltip-arrow-border")
+			.addClass("tooltip-arrow-border-top-right");
+		$("#fileUploadMenuTooltip .tooltip-content").html(title);
+		$("#fileUploadMenu").tooltip({
+			effect: "slide",
+			relative: true,
+			position: "bottom center",
+			offset: [10, 0]
+		});
+		//$("#fileUploadMenu .tooltip").show();
+		
+		
 		return false;
 	},
 	'csvExport': function() {

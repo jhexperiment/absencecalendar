@@ -5,6 +5,7 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -42,17 +44,21 @@ public class ServletImportAbsences extends HttpServlet {
 		UserService userService = UserServiceFactory.getUserService();
 		if ( userService.isUserLoggedIn()) {
 			ArrayList<HashMap<String, Object>> absenceList = new ArrayList<HashMap<String, Object>>();
+			Properties appProps = new Properties();
+			String path = this.getServletContext().getRealPath("/WEB-INF");
+			FileInputStream appPropFile = new FileInputStream(path + "/app.properties");
+			appProps.load(appPropFile);        
 			
 			try {
-			      ServletFileUpload upload = new ServletFileUpload();
+				int importRecordLimit = Integer.parseInt(appProps.getProperty("importRecordLimit"));
+				ServletFileUpload upload = new ServletFileUpload();
 
-			      FileItemIterator iterator = upload.getItemIterator(req);
-			      while (iterator.hasNext()) {
-			        FileItemStream item = iterator.next();
-			        InputStream stream = item.openStream();
-			        
+				FileItemIterator iterator = upload.getItemIterator(req);
+				while (iterator.hasNext()) {
+					FileItemStream item = iterator.next();
+					InputStream stream = item.openStream();
 
-			        if (item.isFormField()) {
+					if (item.isFormField()) {
 			          log.warning("Got a form field: " + item.getFieldName());
 			        } else {
 			        	log.warning("Got an uploaded file: " + item.getFieldName() + ", name = " + item.getName());
@@ -61,14 +67,37 @@ public class ServletImportAbsences extends HttpServlet {
 						String [] absenceInfo;
 						// read header line
 						String [] headers = reader.readNext();;
+						int count = 0;
 						while ((absenceInfo = reader.readNext()) != null) {
 							absenceList.add(this.processAbsence(absenceInfo));
+							count++;
+							if (count >= importRecordLimit) {
+								String errMsg = "Import record limit (" + importRecordLimit + ") reached. ";
+								HashMap<String, Object> absenceJson = new HashMap<String, Object>();
+								absenceJson.put("action", "");
+								absenceJson.put("id", 0);
+								absenceJson.put("employmentType", "");
+								absenceJson.put("date", new Date().getTime());
+								absenceJson.put("name", "");
+								absenceJson.put("formSubmitted", "");
+								absenceJson.put("hours", 0);
+								absenceJson.put("rn", 0);
+								absenceJson.put("error", errMsg);
+								
+								absenceList.add(absenceJson);
+								throw new AbsenceException(errMsg);
+							}
 						}
 			        }	
 		      	}
 		    } 
 			catch (Exception e) {
-		      throw new ServletException(e);
+				if (e instanceof AbsenceException) {
+					
+				}
+				else {
+					throw new ServletException(e);
+				}
 		    } 
 			finally {
 		    	Gson gson = new Gson();
