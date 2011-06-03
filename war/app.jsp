@@ -110,6 +110,9 @@ List<String> tmpList = new ArrayList<String>();
 		<div id="userNavItem" class="appNavRightItem">
 			<input class="logoutUrl" type="hidden" value="<%=url%>">
 			<%=user.getEmail() %>
+			<span class="ui-corner-all">
+				<span class="ui-icon ui-icon-triangle-1-s"></span>
+			</span>
 		</div>
 	</div>
 	<div id="header">
@@ -145,7 +148,7 @@ List<String> tmpList = new ArrayList<String>();
 					</span>
 				</div>
 				<span id="icon" class="ui-state-default ui-corner-all">
-					<span class="ui-icon ui-icon-triangle-1-s"></span>
+					<span class="ui-icon ui-icon-arrowthickstop-1-s"></span>
 				</span>
 		</div>
 		<div class="tableContainer ui-widget ui-widget-content">
@@ -188,6 +191,13 @@ for (Absence absence : absenceList) {
 		<div id="calendar" class="ui-widget-content ui-corner-bottom">
 			<input id="selectedMonth" type="hidden" value="">
 			<input id="selectedDay" type="hidden" value="">
+			<button id="removeCalanderButton" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button">
+				<span class="">Remove Employee</span>
+				<span class="ui-corner-all">
+					<span class="ui-icon ui-icon-trash"></span>
+				</span>
+			</button>
+			
 <%
 Calendar calendar = Calendar.getInstance();
 
@@ -197,8 +207,7 @@ String[] monthList = {"January", "February", "March", "April", "May", "June", "J
 int year = calendar.get(Calendar.YEAR);
 int prevYear = year - 1;
 int nextYear = year + 1;
-%>		
-				
+%>			
 			<div class="year ui-widget-header ui-corner-all">
 				<span class="ui-corner-all">
 					<span class="ui-icon ui-icon-circle-triangle-w"></span>

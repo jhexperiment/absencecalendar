@@ -204,6 +204,20 @@ html, body {
 	padding: 0px 20px 20px 20px;
 	
 	display: inline-block;
+	position: relative;
+}
+
+#calendar #removeCalanderButton {
+	top: 10px;
+	right: 10px;
+	
+	display: none;
+	position: absolute;
+}
+
+#calendar #removeCalanderButton .ui-icon,
+#calendar #removeCalanderButton .ui-corner-all {
+	float: right;
 }
 
 #calendar .spinner {
@@ -382,6 +396,10 @@ html, body {
 	float: right;
 }
 
+#appNavBar #userNavItem span {
+	float: right;
+}
+
 #appNavBar #moreNavItem span {
 	float: right;
 }
@@ -490,7 +508,7 @@ html, body {
 #searchResultsContainer .tableContainer {
 	width: 100%;
 	min-height: 10px;
-	max-height: 600px;
+	max-height: 400px;
 	
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
@@ -503,7 +521,7 @@ html, body {
 	width: 100%;
 	text-align: left;
 	
-	table-layout:fixed;
+	/*table-layout:fixed;*/
 }
 
 #searchResults .searchResultEmpty {

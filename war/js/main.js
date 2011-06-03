@@ -14,7 +14,7 @@ var thisPage = {
 		$("#calendarSelect select option:first").attr("selected", true);
 		$("#calendarSelect select").change(thisPage.calendarSelected);
 		$("#calendarHeader #importButton").click(thisPage.budgetImport);
-		
+		$("#calendar #removeCalanderButton").click(thisPage.removeCalendar)
 		$("#calendar .month .day").click(thisPage.dayClick);
 		$("#calendar .month .day .tooltip-arrow")
 			.removeClass()
@@ -61,10 +61,10 @@ var thisPage = {
 		icon.mouseup(function() {
 			$(this).removeClass("ui-state-active");
 			var childDom = $(this).children(".ui-icon");
-			if (childDom.hasClass("ui-icon-triangle-1-s")) {
+			if (childDom.hasClass("ui-icon-arrowthickstop-1-s")) {
 				thisPage.showSearchResults();
 			}
-			else if (childDom.hasClass("ui-icon-triangle-1-n")) {
+			else if (childDom.hasClass("ui-icon-arrowthickstop-1-n")) {
 				thisPage.hideSearchResults();
 			}
 		});
@@ -452,6 +452,23 @@ var thisPage = {
 		
 		thisPage.displayPopupMenu(this, menuItemList);
 	},
+	'removeCalendar': function() {
+		var data = {
+			'type': 'POST',
+			'name': $("#calendarHeader .header .title").html(),
+			'employmentType': $("#searchResultsContainer .label .title .text").html()
+		};
+		querySite('remove', data, function(absenceList, textStatus, jqXHR) {
+			var name = '';
+			$.each(absenceList, function(index) {
+				name = this.name;
+				thisPage.displaySearchResult(this, index);
+			});
+			$("#calendarSelect select option[value='']").attr("selected", true);
+			$("#calendarSelect select option[value='" + name + "']").remove();
+			$("#calendarSelect select").change();
+		});
+	},
 	'getSelectedDate': function() {
 		var year = parseInt($("#calendar .year .text").html());
 		var month = parseInt($("#calendar #selectedMonth").val());
@@ -543,8 +560,8 @@ var thisPage = {
 		var icon = $("#searchResultsContainer .label span#icon");
 		icon.removeClass("ui-state-active");
 		var childDom = icon.children(".ui-icon");
-		childDom.removeClass("ui-icon-triangle-1-n");
-		childDom.addClass("ui-icon-triangle-1-s");
+		childDom.removeClass("ui-icon-arrowthickstop-1-n");
+		childDom.addClass("ui-icon-arrowthickstop-1-s");
 	},
 	'showSearchResults': function() {
 		var searchResultsDom = $("#searchResultsContainer .tableContainer");
@@ -556,10 +573,11 @@ var thisPage = {
 		var icon = $("#searchResultsContainer .label span#icon");
 		icon.removeClass("ui-state-active");
 		var childDom = icon.children(".ui-icon");
-		childDom.removeClass("ui-icon-triangle-1-s");
-		childDom.addClass("ui-icon-triangle-1-n");
+		childDom.removeClass("ui-icon-arrowthickstop-1-s");
+		childDom.addClass("ui-icon-arrowthickstop-1-n");
 	},
 	'clearSearchResults': function() {
+		
 		var html = '<tr>'
 				 + 		'<th id="formSubmitted" class="ui-widget-header">Form</th>'
 				 +		'<th id="date" class="ui-widget-header">Date</th>'
@@ -567,6 +585,7 @@ var thisPage = {
 				 +		'<th id="info" class="ui-widget-header">Info</th>'
 				 + '</tr>';
 		$("#searchResultsContainer #searchResults").html(html);
+		
 		
 	},
 	'displaySearchResult': function(absence, index) {
@@ -691,7 +710,7 @@ var thisPage = {
 		//icon.removeClass("ui-icon-triangle-1-s");
 		//icon.addClass("ui-icon-triangle-1-n");
 		
-		thisPage.showSearchResults();
+		//thisPage.showSearchResults();
 	},
 	'fillInCalendarSelect': function(absenceList, selectedName) {
 		var calendarSelectDom =  $("#calendarHeader #calendarSelect select");
@@ -769,12 +788,13 @@ var thisPage = {
 		$("#header #searchBar img").show();
 		
 		querySite('search', data, function(absenceList, textStatus, jqXHR) {
+			var icon = $("#searchResultsContainer .label #icon .ui-icon");
+			
 			if (isEmpty(absenceList)) {
 				var html = '<tr class="searchResultEmpty"><td>No results found.</td></tr>';
 				$("#searchResultsContainer #searchResults").html(html);
-				var icon = $("#searchResultsContainer .label .ui-icon");
-				icon.removeClass("ui-icon-triangle-1-s");
-				icon.addClass("ui-icon-triangle-1-n");
+				icon.removeClass("ui-icon-arrowthickstop-1-s");
+				icon.addClass("ui-icon-arrowthickstop-1-n");
 				
 				thisPage.showSearchResults();
 			}
@@ -784,12 +804,20 @@ var thisPage = {
 					this.action = "search";
 					thisPage.displaySearchResult(this, index);
 				});
+				icon.removeClass("ui-icon-arrowthickstop-1-s");
+				icon.addClass("ui-icon-arrowthickstop-1-n");
+				thisPage.showSearchResults();
+				$("#searchResultsContainer .tableContainer").resizable({ 
+					handles: 's',
+					maxHeight: 500
+				});
 			}
+			//thisPage.showSearchResults();
 			$("#searchResultsContainer .label span.text").html("Search Results:");
-			$("#header #searchBar img").hide();
 			$("#searchResults #formSubmitted").hide();
 			$("#searchResults #date").hide();
 			$("#searchResults #info").hide();
+			$("#header #searchBar img").hide();
 		});
 	},
 	'calendarSelected': function() {
@@ -803,6 +831,7 @@ var thisPage = {
 		
 		if (data.name == "Master Calendar") {
 			thisPage.loadMasterCalendar();
+			$("#calendar #removeCalanderButton").hide();
 		}
 		else {
 			querySite('get', data, function(absenceList, textStatus, jqXHR) {
@@ -837,6 +866,7 @@ var thisPage = {
 				thisPage.hideSearchResults();
 				
 				$("#calendarHeader .header img").hide();
+				$("#calendar #removeCalanderButton").show();
 			});
 		}
 		
@@ -1005,7 +1035,7 @@ var thisPage = {
 	'removeAbsence': function() {
 		if (confirm("Are you sure you want to remove this absence?")) {
 			var data = $(this).data("data");
-			querySite('remove', {'type':'POST', 'id': data.absenceId}, function(){
+			querySite('remove', {'type':'POST', 'id': data.absenceId}, function(absenceList, textStatus, jqXHR){
 				$("#" + data.monthDomId + " #" + data.dayDomId).removeClass("absentDay");
 				$("#" + data.monthDomId + " #" + data.dayDomId + " .mask").removeClass("formSubmitted");
 			});
@@ -1133,12 +1163,13 @@ var thisPage = {
 		htmlDom.children('form').ajaxForm({
 			dataType: "json",
 			success: function(info, textStatus, jqXHR) {
-				var tmp = '';
 				$("#searchResultsContainer .label span.text").html("Csv Import Results:");
+				thisPage.fillInCalendarSelect(info.employeeList, "");
 				thisPage.clearSearchResults();
 				$.each(info.absenceList, function(index) {
 					thisPage.displaySearchResult(this, index);
 				})
+				thisPage.showSearchResults();
 				$("#fileUploadMenu").remove();
 				$("#fileUploadMenuTooltip").remove();
 				$("#searchResults #date").show();
@@ -1146,7 +1177,8 @@ var thisPage = {
 				$("#popupBackground").click();
 				$("#calendarHeader #calendarSelect select").change();
 				
-				thisPage.fillInCalendarSelect(info.employeeList, "");
+				
+				
 			}
 		});
 		$("body").append(htmlDom);

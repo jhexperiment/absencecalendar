@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -103,17 +104,16 @@ public enum Dao {
 	 */
 	public List<Absence> getAbsences(String employmentType, String field, String opt, Object val) {
 		EntityManager em = EMFService.get().createEntityManager();
-		String gql = "SELECT a "
-			+ "FROM Absence a "
-			+ "WHERE a.employmentType = :employmentType "
-			+ 	"AND a." + field + " " + opt + " :val "
-			+	"ORDER BY a.name, a.date";
+		String gql =  "SELECT a "
+					+ "FROM Absence a "
+					+ "WHERE a.employmentType = :employmentType "
+					+ 	"AND a." + field + " " + opt + " :val "
+					+	"ORDER BY a.name, a.date";
 		Query q = em.createQuery(gql);
 		q.setParameter("val", val);
 		q.setParameter("employmentType", employmentType);
 		
-		List<Absence> absenceList = q.getResultList();
-		return absenceList;
+		return q.getResultList();
 	}
 	
 	/**
@@ -433,6 +433,39 @@ public enum Dao {
 			throw new AbsenceException("Absence doesn't exist.");
 		}
 		return absence;
+	}
+	
+	public ArrayList<HashMap<String, Object>> remove(String employmentType, String name) {
+		
+		
+		ArrayList<HashMap<String, Object>> jsonAbsenceList = new ArrayList<HashMap<String, Object>>();
+		
+		List<Absence> absenceList = this.getAbsences(employmentType, name);
+		
+		EntityManager em = EMFService.get().createEntityManager();
+		
+		for (Absence absence : absenceList) {
+			HashMap<String, Object> absenceJson = new HashMap<String, Object>();
+				try {
+					absence = em.find(Absence.class, absence.getId());
+					em.remove(absence);
+					absenceJson.put("action", "remove");
+					absenceJson.put("id", absence.getId());
+					absenceJson.put("employmentType", absence.getEmploymentType());
+					absenceJson.put("date", absence.getDate());
+					absenceJson.put("name", absence.getName());
+					absenceJson.put("formSubmitted", absence.getFormSubmitted());
+					absenceJson.put("hours", absence.getHours());
+					absenceJson.put("rn", absence.getRn());
+				} 
+				catch (Exception e) {
+					int tmp = 0;
+					tmp++;
+				}
+			jsonAbsenceList.add(absenceJson);
+		}
+		em.close();
+		return jsonAbsenceList;
 	}
 	
 	/**
