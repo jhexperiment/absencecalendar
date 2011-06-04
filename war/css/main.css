@@ -374,6 +374,10 @@ html, body {
 	color: #F5F3E5;
 }
 
+#appNavBar .currentNavItem a {
+	color: white !important;
+}
+
 #appNavBar .appNavLeftItem,
 #appNavBar .appNavRightItem {
 	padding: 5px 5px 5px 5px;
@@ -381,7 +385,13 @@ html, body {
 	
 	font-weight: bold;
 	
+	
 	cursor: hand; cursor: pointer;
+}
+
+#appNavBar .appNavLeftItem a,
+#appNavBar .appNavRightItem a {
+	color: black;
 }
 
 #appNavBar .appNavLeftItem {
@@ -653,7 +663,7 @@ html, body {
 	cursor: help;
 }
 
-#addAbsenceDialog .rn {
+#addAbsenceDialog .reason {
 	width: 50px;	
 }
 

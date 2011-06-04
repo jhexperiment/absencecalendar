@@ -29,7 +29,7 @@ public class ServletExportAbsences extends HttpServlet {
 			
 			Dao dao = Dao.INSTANCE;
 			List<Absence> absenceList = dao.listAbsences(employmentType, "name");
-			String header = "action,id,employmentType,date,formSubmitted,name,hours,rn\n";
+			String header = "action,id,employmentType,date,formSubmitted,name,hours,reason\n";
 			String data = "";
 			SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy");
 			
@@ -41,7 +41,7 @@ public class ServletExportAbsences extends HttpServlet {
 					+ absence.getFormSubmitted() + ","
 					+ '"' + absence.getName() + "\"," 
 					+ absence.getHours() + ","
-					+ absence.getRn() + "\n";
+					+ absence.getReason() + "\n";
 			}
 			
 			String filename = employmentType.replace(' ', '-').toLowerCase();

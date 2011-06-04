@@ -95,6 +95,18 @@ List<String> tmpList = new ArrayList<String>();
 	<input type="hidden" id="importRecordLimit" value="<%= appProps.getProperty("importRecordLimit") %>">
 	<div id="appNavBar">
 		<div class="appNavLeftItem">&nbsp;</div>
+		<div id="mailNavItem" class="appNavLeftItem">
+			<a href="/">Mail</a>
+		</div>
+		<div id="calendarNavItem" class="appNavLeftItem">
+			<a href="/">Calendar</a>
+		</div>
+		<div id="docsNavItem" class="appNavLeftItem">
+			<a href="/">Documents</a>
+		</div>
+		<div id="sitesNavItem" class="appNavLeftItem">
+			<a href="/">Sites</a>
+		</div>
 		<div id="absencesNavItem" class="currentNavItem appNavLeftItem">
 			<a href="/">Absences</a>
 		</div>
@@ -297,9 +309,9 @@ int nextYear = year + 1;
 			</tr>
 			<tr>
 				<th>RN:</th>
-				<td id="rnField">
-					<input class="rn" type="text">
-					<span id="rnError" class="ui-corner-all ui-state-error" title="">
+				<td id="reasonField">
+					<input class="reason" type="text">
+					<span id="reasonError" class="ui-corner-all ui-state-error" title="">
 						<span class="ui-icon ui-icon-alert"></span>
 					</span>
 					<div class="tooltip">

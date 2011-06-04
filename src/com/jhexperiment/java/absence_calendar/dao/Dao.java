@@ -152,12 +152,12 @@ public enum Dao {
 					+ "FROM Absence a "
 					+ "WHERE a.name = :name "
 					+ 	"AND a.date = :date "
-					+ 	"AND a.rn = :rn "
+					+ 	"AND a.reason = :reason "
 					+ 	"AND a.employmentType = :employmentType ";
 		Query q = em.createQuery(gql);
 		q.setParameter("name", absence.getName());
 		q.setParameter("date", absence.getDate());
-		q.setParameter("rn", absence.getRn());
+		q.setParameter("reason", absence.getReason());
 		q.setParameter("employmentType", absence.getEmploymentType());
 		
 		List<Absence> absenceList = q.getResultList();
@@ -185,7 +185,7 @@ public enum Dao {
 	}
 	
 	public Absence isValidAbsence(String action, String id, String employmentType, String date, 
-									String rn, String name, String hours, String formSubmitted) 
+									String reason, String name, String hours, String formSubmitted) 
 			throws AbsenceException {
 		
 		boolean valid = true;
@@ -201,7 +201,7 @@ public enum Dao {
 			valid = false;
 			errMsg += "ID must be blank to add. ";
 		}
-		else {
+		else if ( ! "".equals(id) ){
 			try {
 				validId = new Long(id);
 			}
@@ -254,10 +254,10 @@ public enum Dao {
 			errMsg += "formSubmitted field must be either TRUE or FALSE. ";
 		}
 		
-		// validate name; contains only 1 comma, only alpha, is not empty
-		if ("".equals(name) || name == null || (name.replaceAll("[^,]", "").length() > 1) || (! name.matches("^[a-zA-Z, /-]*$")) ) {
+		// validate name; contains only 1 comma, only alphanumeric, is not empty
+		if ("".equals(name) || name == null || (name.replaceAll("[^,]", "").length() > 2) || (! name.matches("^[a-zA-Z0-9', /-]*$")) ) {
 			valid = false;
-			errMsg += "Name must not be empty and can only contain letters and one comma. ";
+			errMsg += "Name must not be empty and can only contain letters, numbers, spaces, dashes, apostrophes, and up to one comma. ";
 		}
 		
 		// validate hours; is valid number, is not empty
@@ -276,15 +276,15 @@ public enum Dao {
 			}
 		}
 		
-		// validate reason (rn); is valid number, is not empty
+		// validate reason ; is valid number, is not empty
 		int validReason = 0;
-		if (rn == null || "".equals(rn)) {
+		if (reason == null || "".equals(reason)) {
 			valid = false;
 			errMsg += "Missing reason id. ";
 		}
 		else {
 			try {
-				validReason = new Integer(rn);
+				validReason = new Integer(reason);
 			}
 			catch (NumberFormatException e) {
 				valid = false;
@@ -296,7 +296,7 @@ public enum Dao {
 		if (valid) {
 			
 			absence = new Absence(validId, employmentType, cal.getTimeInMillis(), validReason, 
-									name, validHours, validFormSubmitted);
+									name.toUpperCase(), validHours, validFormSubmitted);
 		}
 		else {
 			throw new AbsenceException(errMsg);
@@ -355,18 +355,18 @@ public enum Dao {
 	 * Adds a new absence to the persistent storage.
 	 * @param employmentType
 	 * @param date
-	 * @param rn
+	 * @param reason
 	 * @param hours
 	 * @param name
 	 * @param formSubmitted
 	 * @throws DuplicateAbsenceException
 	 */
-	public void add(String employmentType, Long date, Integer rn, 
+	public void add(String employmentType, Long date, Integer reason, 
 					Integer hours, String name, boolean formSubmitted) 
 			throws DuplicateAbsenceException {
 		
 		synchronized (this) {
-			Absence absence = new Absence(employmentType, date, rn, name, hours, formSubmitted);
+			Absence absence = new Absence(employmentType, date, reason, name, hours, formSubmitted);
 			add(absence);
 		}
 	}
@@ -456,7 +456,7 @@ public enum Dao {
 					absenceJson.put("name", absence.getName());
 					absenceJson.put("formSubmitted", absence.getFormSubmitted());
 					absenceJson.put("hours", absence.getHours());
-					absenceJson.put("rn", absence.getRn());
+					absenceJson.put("reason", absence.getReason());
 				} 
 				catch (Exception e) {
 					int tmp = 0;

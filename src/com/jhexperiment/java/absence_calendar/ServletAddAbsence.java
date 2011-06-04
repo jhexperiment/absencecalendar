@@ -25,13 +25,13 @@ public class ServletAddAbsence extends HttpServlet {
 		UserService userService = UserServiceFactory.getUserService();
 		if ( userService.isUserLoggedIn()){
 			Long date = new Long(req.getParameter("date"));
-			int rn = Integer.parseInt(req.getParameter("rn"));
+			int reason = Integer.parseInt(req.getParameter("reason"));
 			String employmentType = req.getParameter("employmentType");
 			String name = req.getParameter("name");
 			int hours = Integer.parseInt(req.getParameter("hours"));
 			
 			
-			Absence absence = new Absence(employmentType, date, rn, name, hours, false);
+			Absence absence = new Absence(employmentType, date, reason, name, hours, false);
 			
 			try {
 				Dao.INSTANCE.add(absence);

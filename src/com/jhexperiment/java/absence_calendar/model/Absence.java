@@ -18,27 +18,27 @@ public class Absence implements Comparable<Absence> {
 	private Long id;
 	private String employmentType;
 	private Long date;
-	private Integer rn;
+	private Integer reason;
 	private Integer hours;
 	private String name;
 	private boolean formSubmitted;
 	
-	public Absence(String employmentType, Long date, Integer rn, String name, 
+	public Absence(String employmentType, Long date, Integer reason, String name, 
 				Integer hours, boolean formSubmitted) {
 		this.employmentType = employmentType;
 		this.date = date;
-		this.rn = rn;
+		this.reason = reason;
 		this.name = name;
 		this.hours = hours;
 		this.formSubmitted = formSubmitted;
 	}
 	
-	public Absence(Long id, String employmentType, Long date, Integer rn, String name, 
+	public Absence(Long id, String employmentType, Long date, Integer reason, String name, 
 			Integer hours, boolean formSubmitted) {
 		this.id = id;
 		this.employmentType = employmentType;
 		this.date = date;
-		this.rn = rn;
+		this.reason = reason;
 		this.name = name;
 		this.hours = hours;
 		this.formSubmitted = formSubmitted;
@@ -75,11 +75,11 @@ public class Absence implements Comparable<Absence> {
 	public void setDate(Long date) {
 		this.date = date;
 	}
-	public Integer getRn() {
-		return this.rn;
+	public Integer getReason() {
+		return this.reason;
 	}
-	public void setRn(Integer rn) {
-		this.rn = rn;
+	public void setReason(Integer reason) {
+		this.reason = reason;
 	}
 	public String getName() {
 		return this.name;

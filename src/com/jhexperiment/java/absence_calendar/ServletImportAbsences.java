@@ -88,7 +88,7 @@ public class ServletImportAbsences extends HttpServlet {
 								absenceJson.put("name", "");
 								absenceJson.put("formSubmitted", "");
 								absenceJson.put("hours", 0);
-								absenceJson.put("rn", 0);
+								absenceJson.put("reason", 0);
 								absenceJson.put("error", errMsg);
 								
 								absenceList.add(absenceJson);
@@ -135,7 +135,7 @@ public class ServletImportAbsences extends HttpServlet {
 				absenceJson.put("name", absenceInfo[5]);
 				absenceJson.put("formSubmitted", absenceInfo[4]);
 				absenceJson.put("hours", absenceInfo[6]);
-				absenceJson.put("rn", absenceInfo[7]);
+				absenceJson.put("reason", absenceInfo[7]);
 				
 				absence = Dao.INSTANCE.isValidAbsence(action, absenceInfo[1], absenceInfo[2],
 						absenceInfo[3], absenceInfo[7], absenceInfo[5], absenceInfo[6], absenceInfo[4]);
@@ -157,12 +157,13 @@ public class ServletImportAbsences extends HttpServlet {
 				absenceJson.put("name", absenceInfo[5]);
 				absenceJson.put("formSubmitted", absenceInfo[4]);
 				absenceJson.put("hours", absenceInfo[6]);
-				absenceJson.put("rn", absenceInfo[7]);
+				absenceJson.put("reason", absenceInfo[7]);
 				
 				absence = Dao.INSTANCE.isValidAbsence(action, absenceInfo[1], absenceInfo[2],
 						absenceInfo[3], absenceInfo[7], absenceInfo[5], absenceInfo[6], absenceInfo[4]);
 				
-				Dao.INSTANCE.add(absence);
+				Dao.INSTANCE.add(absence.getEmploymentType(), absence.getDate(), absence.getReason(), 
+								absence.getHours(), absence.getName(), absence.getFormSubmitted());
 				
 			}
 			catch (Exception e) {
@@ -183,7 +184,7 @@ public class ServletImportAbsences extends HttpServlet {
 				absenceJson.put("action", action);
 				absenceJson.put("employmentType", absence.getEmploymentType());
 				absenceJson.put("date", absence.getDate());
-				absenceJson.put("rn", absence.getRn());
+				absenceJson.put("reason", absence.getReason());
 				absenceJson.put("name", absence.getName());
 				absenceJson.put("hours", absence.getHours());
 				absenceJson.put("formSubmitted", absence.getFormSubmitted());				
@@ -209,7 +210,7 @@ public class ServletImportAbsences extends HttpServlet {
 			absenceJson.put("name", absenceInfo[5]);
 			absenceJson.put("formSubmitted", absenceInfo[4]);
 			absenceJson.put("hours", absenceInfo[6]);
-			absenceJson.put("rn", absenceInfo[7]);
+			absenceJson.put("reason", absenceInfo[7]);
 			
 			absenceJson.put("error", "Error: An action is required. ");
 		}
@@ -221,7 +222,7 @@ public class ServletImportAbsences extends HttpServlet {
 			absenceJson.put("name", absenceInfo[5]);
 			absenceJson.put("formSubmitted", absenceInfo[4]);
 			absenceJson.put("hours", absenceInfo[6]);
-			absenceJson.put("rn", absenceInfo[7]);
+			absenceJson.put("reason", absenceInfo[7]);
 			
 			absenceJson.put("error", "Error: Unknown action. ");
 		}

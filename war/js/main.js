@@ -153,34 +153,42 @@ var thisPage = {
 			modal: true,
 			resizable: false,
 			open: function(event, ui) {
+				// clear away ui-button-text class so buttons are so big.
 				$(".ui-dialog button span").removeClass("ui-button-text");
+				
+				// get and display date
 				var year = parseInt($("#calendar .year .text").html());
 				$("#addAbsenceDialog .year").val(year);
-				
 				var month = parseInt($("#calendar #selectedMonth").val());
 				var day = parseInt($("#calendar #selectedDay").val());
-				
 				var date = new Date(year, month, day);
 				$(".ui-dialog .date").html(date.toDateString());
 				
+				// employmentType
 				$(".ui-dialog .employmentType").html($("#searchResultsContainer .label .title .text").html());
 				
+				// copy employee/calendar select box into dialog and add "New Calendar"
+				// to allow for new employee/calendar creation
 				var dialogSelectDom = $("#addAbsenceDialog #nameField select");
 				dialogSelectDom.html($("#calendarHeader #calendarSelect select").html());
 				var html = '<option value="newCalendar">New Calendar</option>';
 				dialogSelectDom.children(":first").after(html);
 				
+				// hide all errors
 				$("#addAbsenceDialog .ui-state-error").hide();
-				$("#addAbsenceDialog #nameField input").val("");
-				$("#addAbsenceDialog #rnField input").val("");
 				
+				// clear input fields
+				$("#addAbsenceDialog #nameField input").val("");
+				$("#addAbsenceDialog #reasonField input").val("");
 				$("#addAbsenceDialog #hoursField input").val("");
+				
 				
 				var curSelected = $("#calendarSelect select option:selected").val();
 				if (curSelected != "" && curSelected != "newCalendar") {
 					dialogSelectDom.children("option[value='" + curSelected + "']").attr("selected", true);
 				}
 				
+				// only display hour field for non-Teachers
 				if ($("#searchResultsContainer .label .title .text").html().trim() == "Teachers") {
 					$("#addAbsenceDialog #hoursField").parent("tr").hide();
 				}
@@ -200,7 +208,7 @@ var thisPage = {
 					
 					var selectDom = $("#addAbsenceDialog #nameField select");
 					var nameDom = $("#addAbsenceDialog #nameField .name");
-					var rnDom = $("#addAbsenceDialog #rnField .rn");
+					var reasonDom = $("#addAbsenceDialog #reasonField .reason");
 					
 					if (curSelect == "Master Calendar") {
 						title = "Please select a calendar or create new one.";
@@ -232,15 +240,15 @@ var thisPage = {
 						// validate name
 						
 						var tmp = name.split(",");
-						// contains only 1 comma; only alpha
-						var regex = /^[A-Z, ]+$/g
-						validName = validName && tmp.length == 2;
+						// contains only 1 comma; only alphanumeric; spaces; dashes; apostrophes;
+						var regex = /^[a-zA-Z0-9', \-]+$/g
+						validName = validName && tmp.length < 3;
 						validName = validName && (name.match(regex) != null);
 						validName = validName && name.length > 0;
 						validName = validName && ! emptyName;
 						
 						if (! validName) {
-							title = "Only letters, spaces, and a single comma allowed.<br><br>"
+							title = "Allowed characters: Numbers, Letters, Spaces, Dashes, and up to one Comma.<br><br>"
 								  +	"Example: LAST, FIRST";
 							
 							$("#addAbsenceDialog #nameField .tooltip .tooltip-arrow")
@@ -266,46 +274,48 @@ var thisPage = {
 							nameErrorDom.show();
 							
 						}
-					}
-					else {
-						nameErrorDom.hide();
-						thisPage.clearAura(selectDom);
-						thisPage.clearAura(nameDom);
+						else {
+							nameErrorDom.hide();
+							thisPage.clearAura(selectDom);
+							thisPage.clearAura(nameDom);
+						}
+						
 					}
 					
-					// validate reason (rn)
-					var rn = $("#addAbsenceDialog table .rn").val();
-					var rnErrorDom = $("#addAbsenceDialog table td #rnError");
-					var emptyRn = isEmpty(rn);
+					
+					// validate reason
+					var reason = $("#addAbsenceDialog table .reason").val();
+					var reasonErrorDom = $("#addAbsenceDialog table td #reasonError");
+					var emptyReason = isEmpty(reason);
 					var regex = /^[0-9]+$/g
-					var validRn = ( ! emptyRn ) && rn.match(regex);
-					if (! validRn ) {
-						var title = emptyRn ? "Please enter RN.<br><br>" : "";
+					var validReason = ( ! emptyReason ) && reason.match(regex);
+					if (! validReason ) {
+						var title = emptyReason ? "Please enter Reason.<br><br>" : "";
 						title += "Numbers only.";
 						
-						$("#addAbsenceDialog #rnField .tooltip .tooltip-arrow")
+						$("#addAbsenceDialog #reasonField .tooltip .tooltip-arrow")
 							.removeClass()
 							.addClass("tooltip-arrow")
 							.addClass("tooltip-arrow-left-top");
-						$("#addAbsenceDialog #rnField .tooltip .tooltip-arrow-border")
+						$("#addAbsenceDialog #reasonField .tooltip .tooltip-arrow-border")
 							.removeClass()
 							.addClass("tooltip-arrow-border")
 							.addClass("tooltip-arrow-border-left-top");
-						$("#addAbsenceDialog #rnField .tooltip .tooltip-content").html(title);
-						rnErrorDom.tooltip({
+						$("#addAbsenceDialog #reasonField .tooltip .tooltip-content").html(title);
+						reasonErrorDom.tooltip({
 							effect: "slide",
 							relative: true,
 							position: "bottom right",
 							offset: [-30, 10]
 						});
 						
-						rnDom.addClass("auraRed");
-						rnErrorDom.show();
+						reasonDom.addClass("auraRed");
+						reasonErrorDom.show();
 						
 					}
 					else {
-						rnErrorDom.hide();
-						thisPage.clearAura(rnDom);
+						reasonErrorDom.hide();
+						thisPage.clearAura(reasonDom);
 					}
 					
 					// validate hours
@@ -314,7 +324,7 @@ var thisPage = {
 					var hoursErrorDom = $("#addAbsenceDialog table td #hoursError");
 					var emptyHours = isEmpty(hours);
 					var regex = /^[0-9]+$/g
-					var validHours = ( ! emptyHours ) && rn.match(regex);
+					var validHours = ( ! emptyHours ) && hours.match(regex);
 					if (! validHours ) {
 						var title = emptyHours ? "Please enter Hours.<br><br>" : "";
 						title += "Numbers only.";
@@ -343,7 +353,7 @@ var thisPage = {
 					}
 					
 					
-					if (validRn && validName && validHours) {
+					if (validReason && validName && validHours) {
 						var date = thisPage.getSelectedDate();
 						var offset = date.getTimezoneOffset() / 60 * -1;
 						date.setHours(offset, 0, 0, 0);
@@ -354,7 +364,7 @@ var thisPage = {
 							'type': 'POST',
 							'employmentType': $("#searchResultsContainer .label .title .text").html(),
 							'date': date.getTime(),
-							'rn': parseInt(rn),
+							'reason': parseInt(reason),
 							'name': name,
 							'hours': parseInt(hours)
 						}
@@ -847,7 +857,7 @@ var thisPage = {
 						dom.addClass("absentDay");
 						dom.children(".absenceId").val(this.id);
 						
-						var title = "RN: " + this.rn;
+						var title = "Reason: " + this.reason;
 						if ( $("#searchResultsContainer .title .text").html() == "Classified Employees" ) {
 							title += "<br><br>Hours: " + this.hours;
 						}

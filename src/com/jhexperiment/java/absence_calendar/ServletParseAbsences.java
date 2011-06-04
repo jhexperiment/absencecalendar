@@ -67,15 +67,15 @@ public class ServletParseAbsences extends HttpServlet {
 					} catch (ParseException e) {
 					}
 					
-					int rn = Integer.parseInt(matcher.group(6));
+					int reason = Integer.parseInt(matcher.group(6));
 					String name = checkNull(matcher.group(9).trim());
 					
-					Absence absence = new Absence(employmentType, date, rn, name, 7, false);
+					Absence absence = new Absence(employmentType, date, reason, name, 7, false);
 					HashMap<String, Object> absenceJson = new HashMap<String, Object>();
 					absenceJson.put("action", "add");
 					absenceJson.put("employmentType", employmentType);
 					absenceJson.put("date", cal.getTimeInMillis());
-					absenceJson.put("rn", rn);
+					absenceJson.put("reason", reason);
 					absenceJson.put("name", name);
 					absenceJson.put("hours", 7);
 					absenceJson.put("formSubmitted", false);
