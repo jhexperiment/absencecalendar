@@ -8,6 +8,7 @@
 <%@ page import="java.util.Properties"%>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.logging.Logger"%>
 <%@ page import="javax.servlet.ServletConfig"%>
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
@@ -39,8 +40,8 @@
 // Get logged in user.
 UserService userService = UserServiceFactory.getUserService();
 User user = userService.getCurrentUser();
-
-
+Logger logger = Logger.getLogger("app");
+logger.info("User logged in: " + user.getEmail());
 
 ArrayList<String> userList = new ArrayList<String>();
 Properties appProps = new Properties();
@@ -95,16 +96,16 @@ List<String> tmpList = new ArrayList<String>();
 	<input type="hidden" id="importRecordLimit" value="<%= appProps.getProperty("importRecordLimit") %>">
 	<div id="appNavBar">
 		<div id="mailNavItem" class="appNavLeftItem">
-			<a href="/">Mail</a>
+			<a href="http://mail.<%= googleProps.getProperty("domain")%>">Mail</a>
 		</div>
 		<div id="calendarNavItem" class="appNavLeftItem">
-			<a href="/">Calendar</a>
+			<a href="http://calendar.<%= googleProps.getProperty("domain")%>">Calendar</a>
 		</div>
 		<div id="docsNavItem" class="appNavLeftItem">
-			<a href="/">Documents</a>
+			<a href="http://docs.<%= googleProps.getProperty("domain")%>">Documents</a>
 		</div>
 		<div id="sitesNavItem" class="appNavLeftItem">
-			<a href="/">Sites</a>
+			<a href="http://sites.<%= googleProps.getProperty("domain")%>">Sites</a>
 		</div>
 		<div id="absencesNavItem" class="currentNavItem appNavLeftItem">
 			<a href="/">Absences</a>
