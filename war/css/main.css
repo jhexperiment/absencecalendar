@@ -251,7 +251,7 @@ html, body {
 	display: inline-block;
 	position: absolute;
 	left: 275px;
-	top: -20px;
+	top: -28px;
 	
 	-moz-border-radius: 25px 25px 0px 0px;
 	-webkit-border-radius: 25px 25px 0px 0px;	
@@ -261,16 +261,17 @@ html, body {
 #calendarHanger {
 	width: 600px;
 	height: 10px;
-	margin: 35px 0px -10px 0px;
+	margin: 45px auto -10px auto;
 	
 	background-color: transparent;
 	
-	display: inline-block;
+	display: block;
 	position: relative;
 	
 	-moz-border-radius: 25px 25px 0px 0px;
 	-webkit-border-radius: 25px 25px 0px 0px;	
 
+	z-index: -1;
 }
 
 #calendar {
@@ -844,14 +845,14 @@ select {
 }
 
 .tooltip .tooltip-arrow-left-top {
-	top: 10px;
+	top: 9px;
   left: -17px;
   
   border-color: transparent #EDEDED transparent transparent;
 }
 
 .tooltip .tooltip-arrow-border-left-top {
-	top: 10px;
+	top: 9px;
 	left: -20px;
 	border-color: transparent #433F38 transparent transparent;
 }
@@ -871,14 +872,14 @@ select {
 }
 
 .tooltip .tooltip-arrow-top-right {
-	top: -19px;
+	top: -18px;
   left: 30px;
   
   border-color: transparent transparent #EDEDED transparent;
 }
 
 .tooltip .tooltip-arrow-border-top-right {
-	top: -22px;
+	top: -21px;
 	left: 30px;
 	border-color: transparent transparent #433F38 transparent;
 }
