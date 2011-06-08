@@ -32,7 +32,7 @@ html, body {
 }
 
 .teacherBody {
-	background-color: #F5F3E5;
+	background-color: #F0F8F0;
 	background-image: -webkit-gradient(
 	    linear,
 	    left bottom,
@@ -50,7 +50,7 @@ html, body {
 }
 
 .classifiedBody {
-	background-color: #F5F3E5;
+	background-color: #F0F8F0;
 	background-image: -webkit-gradient(
 	    linear,
 	    left bottom,
@@ -68,7 +68,7 @@ html, body {
 }
 
 .errorBody {
-	background-color: #F5F3E5;
+	background-color: #F0F8F0;
 	background-image: -webkit-gradient(
 	    linear,
 	    left bottom,
@@ -113,8 +113,8 @@ html, body {
 }
 
 #popupMenu .item:hover {
-	background-color: #67B021;
-	color: #FFFFFF;
+	background-color: #00bf00;
+	color: #f0f8f0;
 }
 
 #content {
@@ -196,6 +196,81 @@ html, body {
 	font-size: 11px;
 	
 	display: none;
+}
+
+#calendarHanger .hook .pinBottom {
+	width: 25px;
+	height: 25px;
+	
+	
+	display: inline-block;
+	position: absolute;
+	left: 6px;
+	top: -12px;
+	
+	background-color: #00BF00;
+	
+	border: 1px solid #008F00;
+	
+	-moz-box-shadow: -2px 5px 5px #003C00;
+  -webkit-box-shadow: -2px 5px 5px #003C00;
+  
+  -moz-border-radius: 25px 25px 25px 25px;
+	-webkit-border-radius: 25px 25px 25px 25px;	
+	
+}
+
+#calendarHanger .hook .pinTop {
+	width: 15px;
+	height: 15px;
+	
+	display: inline-block;
+	position: absolute;
+	left: 16px;
+	top: -16px;
+	
+	border: 1px solid #008F00;
+	
+	background-color: #00BF00;
+	
+	-moz-box-shadow: -2px 5px 5px #003C00;
+  -webkit-box-shadow: -2px 5px 5px #003C00;
+  
+	-moz-border-radius: 15px 15px 15px 15px;
+	-webkit-border-radius: 15px 15px 15px 15px;	
+	
+}
+
+#calendarHanger .hook {
+	width: 30px;
+	height: 50px;
+	border-top: 5px solid black;
+	border-left: 5px solid black;
+	border-right: 5px solid black;
+	
+	display: inline-block;
+	position: absolute;
+	left: 275px;
+	top: -20px;
+	
+	-moz-border-radius: 25px 25px 0px 0px;
+	-webkit-border-radius: 25px 25px 0px 0px;	
+	
+}
+
+#calendarHanger {
+	width: 600px;
+	height: 10px;
+	margin: 35px 0px -10px 0px;
+	
+	background-color: transparent;
+	
+	display: inline-block;
+	position: relative;
+	
+	-moz-border-radius: 25px 25px 0px 0px;
+	-webkit-border-radius: 25px 25px 0px 0px;	
+
 }
 
 #calendar {
@@ -285,10 +360,10 @@ html, body {
 	line-height: 20px;
 	
 	float: left;
-	border-left: 1px solid #F5F3E5;
-	border-right: 1px solid #F5F3E5;
-	background-color: #459E00;
-	color: #F5F3E5;
+	border-left: 1px solid #F0F8F0;
+	border-right: 1px solid #F0F8F0;
+	background-color: #008F00;
+	color: #F0F8F0;
 	text-align: center;
 	vertical-align: middle;
 }
@@ -300,7 +375,7 @@ html, body {
 }
 
 #calendar .month .weekend:hover {
-	border: 1px solid #F5F3E5 !important;
+	border: 1px solid #F0F8F0 !important;
 }
 
 
@@ -317,7 +392,7 @@ html, body {
 	padding: 2px 2px 2px 2px;
 	
 	float: left;
-	border: 1px solid #F5F3E5;
+	border: 1px solid #F0F8F0;
 	
 	
 	z-index: 51;
@@ -342,12 +417,12 @@ html, body {
 
 
 .absentDay {
-	background-color: lime;
+	background-color: #80DF80;
 	cursor: hand; cursor: pointer;
 }
 
 .formSubmitted {
-	background-color: pink;	
+	background-color: #dfc0c0;	
 }
 
 #appNavBar {
@@ -356,8 +431,8 @@ html, body {
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
 
-	border-top: 2px solid #DFD9C3;
-	border-bottom: 1px solid #DFD9C3;
+	border-top: 2px solid #C0E0C0;
+	border-bottom: 1px solid #C0E0C0;
 	
 	display: inline-block;
 }
@@ -368,41 +443,54 @@ html, body {
 }
 
 #appNavBar .currentNavItem {
-	font-weight: bold;
+	padding: 4px 5px 5px 5px !important;
+	font-weight: bold !important;
 	border-top: 3px solid #4FB500 !important;
-	background-color: #459E00;
-	color: #F5F3E5;
+	/*
+	border-left: 3px solid #F5F3E5 !important;
+	border-right: 3px solid #F5F3E5 !important;
+	*/
 }
 
-#appNavBar .currentNavItem a {
-	color: white !important;
+#appNavBar .currentNavItem a,
+#appNavBar .currentNavItem .text {
+	color: #003600 !important;
+}
+
+#appNavBar .appNavLeftItem .text,
+#appNavBar .appNavRightItem .text,
+#appNavBar .currentNavItem .text {
+	float: left;
 }
 
 #appNavBar .appNavLeftItem,
 #appNavBar .appNavRightItem {
+	margin: -2px 0px 0px 0px;
 	padding: 5px 5px 5px 5px;
-	border-top: 3px solid #459E00;
 	
-	font-weight: bold;
-	
-	
+	font-weight: normal;
+
 	cursor: hand; cursor: pointer;
 }
 
+#appNavBar .appNavLeftItem:hover,
+#appNavBar .appNavRightItem:hover {
+	background-color: #C0EFC0;
+}
 #appNavBar .appNavLeftItem a,
-#appNavBar .appNavRightItem a {
-	color: black;
+#appNavBar .appNavRightItem a,
+#appNavBar .appNavLeftItem .text,
+#appNavBar .appNavRightItem .text {
+		color: #008000;
 }
 
 #appNavBar .appNavLeftItem {
-	margin: -2px 1px 0px 0px;
-	
+	border-top: 2px solid transparent;
 	float: left;
 }
 
 #appNavBar .appNavRightItem {
-	margin: -2px 0px 0px 1px;
-	
+	border-top: 2px solid transparent;
 	float: right;
 }
 
@@ -413,11 +501,11 @@ html, body {
 #appNavBar #moreNavItem span {
 	float: right;
 }
-
+/*
 #appNavBar #moreNavItem .ui-icon:hover {
 	background-image: url("/css/jquery/images/ui-icons_8dc262_256x240.png");
 }
-
+*/
 #header {
 	width: 100%;
 	height: auto;
@@ -476,6 +564,8 @@ html, body {
 
 .ui-button {
 	padding: 5px 5px 5px 5px;
+	
+	font-weight: bold !important;
 }
 
 #searchResultsContainer {
@@ -547,7 +637,7 @@ html, body {
 	
 	font-weight: bold;
 	
-	border-bottom: 1px solid #DFD9C3;
+	border-bottom: 1px solid #C0E0C0;
 	
 	cursor: hand; cursor: pointer;
 }
@@ -590,7 +680,7 @@ html, body {
 	border-top: 0px !important;
 	border-left: 0px !important;
 	border-right: 0px !important;
-	border-bottom: 1px solid #DFD9C3;
+	border-bottom: 1px solid #C0E0C0;
 }
 
 #searchResultsContainer .label .title {
@@ -674,8 +764,9 @@ html, body {
 input[type=text],
 select {
 	padding: 2px 0px 2px 0px;
-	border: 1px solid #D4CCB0;
-	background-color: white;
+	border: 1px solid #C0E0C0;
+	background-color: #F0F8F0;
+	color: #003600;
 	
 }
 

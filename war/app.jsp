@@ -94,7 +94,6 @@ List<String> tmpList = new ArrayList<String>();
 %>
 	<input type="hidden" id="importRecordLimit" value="<%= appProps.getProperty("importRecordLimit") %>">
 	<div id="appNavBar">
-		<div class="appNavLeftItem">&nbsp;</div>
 		<div id="mailNavItem" class="appNavLeftItem">
 			<a href="/">Mail</a>
 		</div>
@@ -110,18 +109,17 @@ List<String> tmpList = new ArrayList<String>();
 		<div id="absencesNavItem" class="currentNavItem appNavLeftItem">
 			<a href="/">Absences</a>
 		</div>
-		<div class="appNavLeftItem">&nbsp;</div>
 		<div id="moreNavItem" class="appNavLeftItem">
-			<div style="float:left;">Extras</div> 
+			<div class="text">Extras</div> 
 			<span class="ui-corner-all">
 				<span class="ui-icon ui-icon-triangle-1-s"></span>
 			</span>
 		</div>
 		
-		<div class="appNavRightItem">&nbsp;</div>
+		
 		<div id="userNavItem" class="appNavRightItem">
 			<input class="logoutUrl" type="hidden" value="<%=url%>">
-			<%=user.getEmail() %>
+			<div class="text"><%=user.getEmail() %></div>
 			<span class="ui-corner-all">
 				<span class="ui-icon ui-icon-triangle-1-s"></span>
 			</span>
@@ -199,8 +197,13 @@ for (Absence absence : absenceList) {
 		
 	</div>
 	<div id="content">
-			
-		<div id="calendar" class="ui-widget-content ui-corner-bottom">
+		<div id="calendarHanger">
+			<div class="hook">
+				<div class="pinBottom"></div>
+				<div class="pinTop"></div>
+			</div>
+		</div>
+		<div id="calendar" class="ui-widget-content ui-corner-all">
 			<input id="selectedMonth" type="hidden" value="">
 			<input id="selectedDay" type="hidden" value="">
 			<button id="removeCalanderButton" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button">

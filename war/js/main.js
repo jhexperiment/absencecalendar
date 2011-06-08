@@ -84,7 +84,7 @@ var thisPage = {
 		
 		$("#calendar .month .day").bind("contextmenu", thisPage.displayDayMenu);
 		
-		$("#appNavBar #moreNavItem .ui-icon").click(function() {
+		$("#appNavBar #moreNavItem").click(function() {
 			menuItemList = new Array();
 			menuItemList.push({
 				'name': 'CSV Import ' + $("#searchResultsContainer .label .title .text").html(), 
