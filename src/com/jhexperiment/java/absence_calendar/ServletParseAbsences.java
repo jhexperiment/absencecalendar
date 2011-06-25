@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
+
 import com.jhexperiment.java.absence_calendar.dao.Dao;
 import com.jhexperiment.java.absence_calendar.model.Absence;
 
@@ -30,7 +31,7 @@ import com.jhexperiment.java.absence_calendar.model.Absence;
  */
 @SuppressWarnings("serial")
 public class ServletParseAbsences extends HttpServlet {
-	private static final Logger log = Logger.getLogger(ServletParseAbsences.class.getName());
+	//private static final Logger log = Logger.getLogger(ServletParseAbsences.class.getName());
 
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {

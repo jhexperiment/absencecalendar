@@ -44,20 +44,21 @@ public class ServletImportAbsences extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		UserService userService = UserServiceFactory.getUserService();
 		if ( userService.isUserLoggedIn()) {
-			
-			String employmentType = req.getParameter("employmentType");
-			
-			ArrayList<HashMap<String, Object>> absenceList = new ArrayList<HashMap<String, Object>>();
-			
 			Properties appProps = new Properties();
 			String path = this.getServletContext().getRealPath("/WEB-INF");
 			FileInputStream appPropFile = new FileInputStream(path + "/app.properties");
-			appProps.load(appPropFile);        
+			appProps.load(appPropFile);
 			
+			ArrayList<HashMap<String, Object>> absenceList = new ArrayList<HashMap<String, Object>>();
+			String employmentType = new String();
 			try {
+				
 				int importRecordLimit = Integer.parseInt(appProps.getProperty("importRecordLimit"));
+				
 				ServletFileUpload upload = new ServletFileUpload();
-
+				
+				
+				
 				FileItemIterator iterator = upload.getItemIterator(req);
 				while (iterator.hasNext()) {
 					FileItemStream item = iterator.next();
@@ -65,8 +66,17 @@ public class ServletImportAbsences extends HttpServlet {
 					if (item.isFormField()) {
 					  if ("employmentType".equals(item.getFieldName())) {
 						  InputStream stream = item.openStream();
-						  employmentType = Streams.asString(stream);;
+						  employmentType = Streams.asString(stream);
 			          }
+					  else if ("recordLimit".equals(item.getFieldName())) {
+						  try {
+							  InputStream stream = item.openStream();
+							  String tmp = Streams.asString(stream);
+							  importRecordLimit = Integer.parseInt(tmp);
+						  }
+						  catch (Exception e) {} // no recordLimit supplied
+						
+					  }
 			        } else {
 			        	log.warning("Got an uploaded file: " + item.getFieldName() + ", name = " + item.getName());
 			        	InputStream stream = item.openStream();

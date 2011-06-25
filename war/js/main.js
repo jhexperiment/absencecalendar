@@ -251,14 +251,6 @@ var thisPage = {
 							title = "Allowed characters: Numbers, Letters, Spaces, Dashes, and up to one Comma.<br><br>"
 								  +	"Example: LAST, FIRST";
 							
-							$("#addAbsenceDialog #nameField .tooltip .tooltip-arrow")
-								.removeClass()
-								.addClass("tooltip-arrow")
-								.addClass("tooltip-arrow-left-top");
-							$("#addAbsenceDialog #nameField .tooltip .tooltip-arrow-border")
-								.removeClass()
-								.addClass("tooltip-arrow-border")
-								.addClass("tooltip-arrow-border-left-top");
 							$("#addAbsenceDialog #nameField .tooltip .tooltip-content").html(title);
 							nameErrorDom.tooltip({
 								effect: "slide",
@@ -293,14 +285,6 @@ var thisPage = {
 						var title = emptyReason ? "Please enter Reason.<br><br>" : "";
 						title += "Numbers only.";
 						
-						$("#addAbsenceDialog #reasonField .tooltip .tooltip-arrow")
-							.removeClass()
-							.addClass("tooltip-arrow")
-							.addClass("tooltip-arrow-left-top");
-						$("#addAbsenceDialog #reasonField .tooltip .tooltip-arrow-border")
-							.removeClass()
-							.addClass("tooltip-arrow-border")
-							.addClass("tooltip-arrow-border-left-top");
 						$("#addAbsenceDialog #reasonField .tooltip .tooltip-content").html(title);
 						reasonErrorDom.tooltip({
 							effect: "slide",
@@ -323,21 +307,19 @@ var thisPage = {
 					var hours = (employmentType == "Teachers") ? "7" : hoursDom.val();
 					var hoursErrorDom = $("#addAbsenceDialog table td #hoursError");
 					var emptyHours = isEmpty(hours);
-					var regex = /^[0-9]+$/g
-					var validHours = ( ! emptyHours ) && hours.match(regex);
-					if (! validHours ) {
+					var regex = /^[0-9]+(\.(25|5|50|75))?$/g;
+					var match = hours.match(regex)
+					var validHours = (emptyHours || hours > 24 || !(match) ) ? false : true;
+					hours = parseFloat(hours);
+					if ( ! validHours ) {
 						var title = emptyHours ? "Please enter Hours.<br><br>" : "";
-						title += "Numbers only.";
+						title += "Numbers with or without quarter fractions. " 
+							  + "<br><br>ie. .25 .50 .75";
+						if (hours > 24) {
+							title += "<br> I'm pretty sure there are only 24 horus in a day. O_o";
+						}
 						
-						$("#addAbsenceDialog #hourField .tooltip .tooltip-arrow")
-							.removeClass()
-							.addClass("tooltip-arrow")
-							.addClass("tooltip-arrow-left-top");
-						$("#addAbsenceDialog #hourField .tooltip .tooltip-arrow-border")
-							.removeClass()
-							.addClass("tooltip-arrow-border")
-							.addClass("tooltip-arrow-border-left-top");
-						$("#addAbsenceDialog #hourField .tooltip .tooltip-content").html(title);
+						$("#addAbsenceDialog #hoursField .tooltip .tooltip-content").html(title);
 						hoursErrorDom.tooltip({
 							effect: "slide",
 							relative: true,
@@ -366,7 +348,7 @@ var thisPage = {
 							'date': date.getTime(),
 							'reason': parseInt(reason),
 							'name': name,
-							'hours': parseInt(hours)
+							'hours': hours
 						}
 						querySite('add', data, function(absenceList, textStatus, jqXHR) {
 							var curSelect = $("#addAbsenceDialog table select option:selected").html();
@@ -507,12 +489,10 @@ var thisPage = {
 		//$("#calendarSelect select option[value='']").attr("selected", true);
 		$("#calendar .dayPlaceHolder").remove();
 		
-		var date = new Date(year, 01, 01);
-		var isLeapYear = new Date(year,1,29).getDate() == 29;
+		
 		$.each($("#calendar .month"), function() {
 			var index = parseInt($(this).attr("id").replace("month_", ""));
-			date.setMonth(index);
-			date.setDate(1);
+			var date = new Date(year, index, 1);
 			var firstDayIndex = date.getDay();
 			var firstDayDom = $(this).children("#day_1");
 			for (i = 0; i < firstDayIndex; i++) {
@@ -520,7 +500,7 @@ var thisPage = {
 				firstDayDom.before(html);
 			}
 			if (index == 1) {
-				
+				var isLeapYear = new Date(year,1,29).getDate() == 29;
 				if (isLeapYear) {
 					var html = '<div class="day dayOfMonth" id="day_29">'
 							 +		'<input class="absenceId" type="hidden" value="">'
@@ -614,8 +594,8 @@ var thisPage = {
 			if ( Object.prototype.toString.call(date) === "[object Date]" ) {
 				// it is a date
 				if ( isNaN( date.getTime() ) ) {  
-					// date is not valid
-					date = "";
+					// date is not valid string
+					date = absence.date;
 				}
 				else {
 					// date is valid
@@ -1145,14 +1125,18 @@ var thisPage = {
 	'csvImport': function(event) {
 		event.preventDefault();
 		var employmentType = $("#searchResultsContainer .title .text").html();
+		
 		var html	= '<div id="fileUploadMenu" class="ui-widget-content auraGreen">'
 					+	'<form action="/import" method="POST" type="multipart/form-data">'
 					+		'<input type="hidden" name="employmentType" value="' + employmentType + '">'
+					+		'<input type="hidden" id="recordLimit" name="recordLimit" value="">'
 					+		'<input type="file" id="csvFile" name="csvFile">'
 					+	'</form>'
 					+ '</div>'
 					+ '<div id="fileUploadMenuTooltip" class="tooltip">'
-					+	'<div class="tooltip-content"></div>'
+					+	'<div class="tooltip-content">'
+					+		'Import record limit: <input type="text"> records.'
+					+	'</div>'
 					+	'<div class="tooltip-arrow-border"></div>'
 					+	'<div class="tooltip-arrow"></div>'
 					+ '</div>';
@@ -1168,6 +1152,7 @@ var thisPage = {
 						+ parseInt($(this).css('padding-right').replace('px', ''));
 		htmlDom.css('left', left);
 		htmlDom.children("form").children("#csvFile").change(function(){
+			$("#fileUploadMenu form #recordLimit").val($("#fileUploadMenuTooltip .tooltip-content input").val());
 			$("#fileUploadMenu form").submit();
 		});
 		htmlDom.children('form').ajaxForm({
@@ -1193,7 +1178,7 @@ var thisPage = {
 		});
 		$("body").append(htmlDom);
 		
-		var title = "Import record limit: " + $("#importRecordLimit").val() + " records.";
+		//var title = "Import record limit: " + $("#importRecordLimit").val() + " records.";
 		$("#fileUploadMenuTooltip .tooltip-arrow")
 			.removeClass()
 			.addClass("tooltip-arrow")
@@ -1202,12 +1187,12 @@ var thisPage = {
 			.removeClass()
 			.addClass("tooltip-arrow-border")
 			.addClass("tooltip-arrow-border-top-right");
-		$("#fileUploadMenuTooltip .tooltip-content").html(title);
+		$("#fileUploadMenuTooltip .tooltip-content input").val($("#importRecordLimit").val());
 		$("#fileUploadMenu").tooltip({
 			effect: "slide",
 			relative: true,
 			position: "bottom center",
-			offset: [10, 0]
+			offset: [0, -47]
 		});
 		//$("#fileUploadMenu .tooltip").show();
 		

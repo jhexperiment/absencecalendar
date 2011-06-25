@@ -28,7 +28,7 @@ public class ServletAddAbsence extends HttpServlet {
 			int reason = Integer.parseInt(req.getParameter("reason"));
 			String employmentType = req.getParameter("employmentType");
 			String name = req.getParameter("name");
-			int hours = Integer.parseInt(req.getParameter("hours"));
+			float hours = Float.valueOf(req.getParameter("hours")).floatValue();
 			
 			
 			Absence absence = new Absence(employmentType, date, reason, name, hours, false);

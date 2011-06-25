@@ -3,6 +3,7 @@ package com.jhexperiment.java.absence_calendar.dao;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+
 /**
  * Service class to access the app engine persistence storage.
  * @author jhxmonkey

@@ -40,8 +40,6 @@
 // Get logged in user.
 UserService userService = UserServiceFactory.getUserService();
 User user = userService.getCurrentUser();
-Logger logger = Logger.getLogger("app");
-logger.info("User logged in: " + user.getEmail());
 
 ArrayList<String> userList = new ArrayList<String>();
 Properties appProps = new Properties();
@@ -51,7 +49,7 @@ try {
 	
 	// Get google properties
 	FileInputStream googlePropFile = new FileInputStream(path + "/google.properties");
-	googleProps.load(googlePropFile);        
+	googleProps.load(googlePropFile);
 	
 	// Get genral app properties
 	FileInputStream appPropFile = new FileInputStream(path + "/app.properties");
@@ -172,7 +170,7 @@ List<String> tmpList = new ArrayList<String>();
 	<div id="calendarHeader">
 		<div class="header ui-widget-header">
 			<span class="text">Paste copy from budget:</span>
-			<button id="importButton" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">
+			<button id="importButton" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
 				<span class="">Import</span>
 			</button>
 			<div class="title">Master Calendar</div>
@@ -306,8 +304,8 @@ int nextYear = year + 1;
 					</span>
 					<div class="tooltip">
 						<div class="tooltip-content"></div>
-						<div class="tooltip-arrow-border"></div>
-  					<div class="tooltip-arrow"></div>
+						<div class="tooltip-arrow-border tooltip-arrow-border-left-top"></div>
+  					<div class="tooltip-arrow tooltip-arrow-left-top"></div>
   				</div>
 				</td>
 			</tr>
@@ -320,8 +318,8 @@ int nextYear = year + 1;
 					</span>
 					<div class="tooltip">
 						<div class="tooltip-content"></div>
-						<div class="tooltip-arrow-border"></div>
-  					<div class="tooltip-arrow"></div>
+						<div class="tooltip-arrow-border tooltip-arrow-border-left-top"></div>
+  					<div class="tooltip-arrow tooltip-arrow-left-top"></div>
   				</div>
 				</td>
 			</tr>
@@ -334,8 +332,8 @@ int nextYear = year + 1;
 					</span>
 					<div class="tooltip">
 						<div class="tooltip-content"></div>
-						<div class="tooltip-arrow-border"></div>
-  					<div class="tooltip-arrow"></div>
+						<div class="tooltip-arrow-border tooltip-arrow-border-left-top"></div>
+  					<div class="tooltip-arrow tooltip-arrow-left-top"></div>
   				</div>
 				</td>
 			</tr>

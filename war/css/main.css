@@ -546,13 +546,14 @@ html, body {
 	margin: 20px 0px 0px 0px;
 	
 	
-	background: url("/css/jquery/images/ui-bg_gloss-wave_100_ece8da_500x100.png") repeat-x scroll 50% 50% #ECE8DA;
-	border-top: 1px solid #D4CCB0;
-	border-bottom: 1px solid #D4CCB0;
+	/*background: url("/css/jquery/images/ui-bg_gloss-wave_100_ece8da_500x100.png") repeat-x scroll 50% 50% #ECE8DA;*/
+	background-color: #E0F0E0;
+	border-top: 1px solid #C0E0C0;
+	border-bottom: 1px solid #C0E0C0;
 	
 	display: inline-block;
 	
-	color: #433F38;
+	color: #003600;
   font-weight: bold;
 	font-size: 10px;
 	text-align: right;	
@@ -561,6 +562,10 @@ html, body {
 
 #searchQuery {
 	width: 300px;
+}
+
+.ui-resizable-handle {
+	background-image: none;
 }
 
 .ui-button {
@@ -833,6 +838,12 @@ select {
 
 .tooltip .tooltip-content {
 	
+}
+
+.tooltip .tooltip-content input {
+	width: 40px;
+	
+	text-align: right;
 }
 
 .tooltip .tooltip-arrow {

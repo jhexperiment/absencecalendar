@@ -4,11 +4,9 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -17,6 +15,7 @@ import javax.persistence.Query;
 import com.jhexperiment.java.absence_calendar.AbsenceException;
 import com.jhexperiment.java.absence_calendar.DuplicateAbsenceException;
 import com.jhexperiment.java.absence_calendar.model.Absence;
+
 
 /**
  * Enum to facilitate access to the persistent store.
@@ -261,14 +260,14 @@ public enum Dao {
 		}
 		
 		// validate hours; is valid number, is not empty
-		int validHours = 0;
+		float validHours = 0;
 		if (hours == null || "".equals(hours)) {
 			valid = false;
 			errMsg += "Missing hours. ";
 		}
 		else {
 			try {
-				validHours = new Integer(hours);
+				validHours = Float.valueOf(hours).floatValue();
 			}
 			catch (NumberFormatException e) {
 				valid = false;
@@ -362,7 +361,7 @@ public enum Dao {
 	 * @throws DuplicateAbsenceException
 	 */
 	public void add(String employmentType, Long date, Integer reason, 
-					Integer hours, String name, boolean formSubmitted) 
+					float hours, String name, boolean formSubmitted) 
 			throws DuplicateAbsenceException {
 		
 		synchronized (this) {
