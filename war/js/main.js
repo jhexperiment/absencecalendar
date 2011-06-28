@@ -316,7 +316,7 @@ var thisPage = {
 						title += "Numbers with or without quarter fractions. " 
 							  + "<br><br>ie. .25 .50 .75";
 						if (hours > 24) {
-							title += "<br> I'm pretty sure there are only 24 horus in a day. O_o";
+							title += "<br><br>O_o I'm pretty sure there are only 24 horus in a day.";
 						}
 						
 						$("#addAbsenceDialog #hoursField .tooltip .tooltip-content").html(title);
